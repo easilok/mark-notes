@@ -1,7 +1,19 @@
-import logo from './logo.svg';
+import Note from './pages/Note';
+import MainMenu from './components/MainMenu';
+
+// import logo from './logo.svg';
 import './App.css';
 
 function App() {
+
+  return (
+    <div className="App">
+      <MainMenu />
+      <Note />
+    </div>
+  );
+
+  /*
   return (
     <div className="App">
       <header className="App-header">
@@ -20,6 +32,7 @@ function App() {
       </header>
     </div>
   );
+  */
 }
 
 export default App;

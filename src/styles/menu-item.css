@@ -1,0 +1,53 @@
+.note-item {
+  border: black 1px solid;
+  padding: .75rem;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.note-item:hover {
+  background-color: blue;
+}
+
+.menu-item {
+  display: flex;
+  cursor: pointer;
+  padding: .75rem;
+  align-items: center;
+}
+
+.menu-item:hover {
+  background: blue;
+  color: red;
+}
+
+.note-item__info {
+  overflow: hidden;
+}
+
+.menu-item > * {
+  font-size: 0.95rem;
+  margin: 0 .6rem 0 0;
+}
+
+.note-item__info h4 {
+  margin: 0 0 .5rem 0;
+  font-size: 0.95rem;
+  /* line-height: 1.75rem; */
+}
+
+.note-item__info h5 {
+  color: #ccc;
+  margin: 0;
+  font-size: 0.75rem;
+  /* line-height: 1.75rem; */
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.note-item__action {
+  display: none;
+  width: 20px;
+}

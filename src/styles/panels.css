@@ -1,0 +1,32 @@
+.side-panel__container {
+  height: 100vh;
+  width: auto;
+  max-width: 200px;
+  color: white;
+  border: #ccc 1px solid;
+}
+
+.side-panel__header {
+  display: flex;
+  justify-content: flex-end;
+  padding: .75rem;
+}
+
+.side-panel__header.iconify {
+  justify-content: flex-start;
+}
+
+.side-panel__action {
+  background: transparent;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+.side-panel__action:hover {
+  color: red;
+}
+
+.note-page {
+  flex: 1;
+}

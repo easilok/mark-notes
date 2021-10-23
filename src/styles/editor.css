@@ -1,0 +1,52 @@
+.editor__container {
+  /* width: 100vw; */
+  height: 100vh;
+  /* overflow: auto; */
+  display: flex;
+  flex-direction: column;
+}
+
+.editor__split-panel {
+  display: flex;
+  width: 100%;
+  flex: 1;
+}
+
+.editor__preview {
+  border: #ccc 1px solid;
+  /* border-radius: 10px; */
+  flex: 1;
+}
+
+.editor__edit {
+  flex: 1;
+  padding: 1rem 0;
+}
+
+.editor-actions__container {
+  height: 32px;
+  width: 100%;
+  color: white;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.editor-actions {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1rem;
+  width: 100%;
+}
+
+.editor-actions > section {
+}
+
+.editor-actions > section > * {
+  margin-right: 1rem;
+  cursor: pointer;
+}
+
+.editor-actions > section > *:hover {
+  color: red;
+}

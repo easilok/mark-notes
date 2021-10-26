@@ -1,37 +1,44 @@
 import React from "react";
-import { EditorState, Compartment } from "@codemirror/state";
-import { EditorView } from "@codemirror/view";
+import { EditorState, Extension } from "@codemirror/state";
+import { EditorView, ViewUpdate } from "@codemirror/view";
 import { basicSetup } from "@codemirror/basic-setup";
-import { markdown } from "@codemirror/lang-markdown";
+// import { javascript } from "@codemirror/lang-javascript";
+import { markdown } from '@codemirror/lang-markdown';
 import { oneDark } from "@codemirror/theme-one-dark";
 
-const languageConf = new Compartment();
+interface EditorProps {
+  value?: string;
+  theme?: string;
+  className?: string;
+  onUpdate?: (update: ViewUpdate) => void;
+}
 
-const CodeMirror = ({ value = '', onUpdate = undefined }) => {
+const CodeMirror = ({ value = "", onUpdate = undefined, className = '', ...props }: EditorProps) => {
   const editor = React.useRef(null);
 
   React.useEffect(() => {
-    const currentEditor = editor.current;
-
-    // const extensions = [basicSetup, oneDark, javascript()];
-    const extensions = [basicSetup, oneDark, languageConf.of(markdown())];
+    const currentEditor = editor.current as Exclude<
+      typeof editor["current"],
+      null
+    >;
+    const extensions: Extension[] = [
+      basicSetup,
+      oneDark,
+      EditorView.lineWrapping,
+      markdown()
+    ];
     if (onUpdate) extensions.push(EditorView.updateListener.of(onUpdate));
-
-    console.log(value);
 
     const state = EditorState.create({
       doc: value,
-      // doc: 'console.log("hello")',
       extensions
     });
-    if (currentEditor != null) {
-      const view = new EditorView({ state, parent: currentEditor });
-      return () => view.destroy();
-    }
+    const view = new EditorView({ state, parent: currentEditor });
 
-  }, [editor, onUpdate, value]);
+    return () => view.destroy();
+  }, [editor]);
 
-  return <div ref={editor} />;
+  return <div ref={editor} className={className} />;
 };
 
 export default CodeMirror;

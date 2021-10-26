@@ -25,10 +25,11 @@ const removeNoteFromStorage = (state: NoteState) => {
 }
 
 const saveNoteToStorage = (state: NoteState) => {
-  if (state.filename.length > 0) {
-    const filepath = Note.getFilepath(state.filename);
-    localStorage.setItem(filepath, state.noteContent);
+  if (state.filename.length === 0) {
+    return;
   }
+  const filepath = Note.getFilepath(state.filename);
+  localStorage.setItem(filepath, state.noteContent);
   const noteIndex = state.notes.findIndex(n => n.filename === state.filename);
   let noteTitle = '';
   if (state.noteContent.length > 0) {

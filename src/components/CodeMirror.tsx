@@ -24,9 +24,11 @@ const CodeMirror = ({ value = '', onUpdate = undefined }) => {
       // doc: 'console.log("hello")',
       extensions
     });
-    const view = new EditorView({ state, parent: currentEditor });
+    if (currentEditor != null) {
+      const view = new EditorView({ state, parent: currentEditor });
+      return () => view.destroy();
+    }
 
-    return () => view.destroy();
   }, [editor, onUpdate, value]);
 
   return <div ref={editor} />;

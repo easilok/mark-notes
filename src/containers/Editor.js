@@ -1,19 +1,47 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
+
 import {
   saveNote, setNoteContent, deleteNote
 } from '../store/slices/notesSlice';
+import { tooglePreviewNote } from '../store/slices/settingsSlice';
 import NotePreview from '../components/NotePreview';
 import NoteEditor from '../components/NoteEditor';
 import EditorActions from '../components/EditorActions';
 
-import '../styles/editor.css';
+import '../styles/editor.scss';
 
 function Editor() {
   const noteText = useSelector(state => state.notes.noteContent);
-  const [editMode, setEditMode] = useState(false);
+  const editMode = useSelector(state => !state.settings.previewNote);
   const [splitPanel, setSplitPanel] = useState(false);
   const dispatch = useDispatch();
+
+  const deleteNoteHandler = () => {
+    Swal.fire({
+      title: 'Delete Note',
+      text: 'Are you sure you want to delete this note?',
+      icon: 'warning',
+      allowEnterKey: false,
+      showCancelButton: true,
+      showConfirmButton: true,
+      focusCancel: true,
+      focusConfirm: false,
+    })
+      .then(result => {
+        if (result.isConfirmed) {
+          dispatch(deleteNote());
+          Swal.fire({
+            title: 'Note Deleted!',
+            icon: 'success',
+            toast: true,
+            position: 'bottom-right',
+            timer: 3000,
+          });
+        }
+      });
+  };
 
   let editorComponent = null;
   if (splitPanel || editMode) {
@@ -34,10 +62,10 @@ function Editor() {
       <div className="editor-actions__container">
         <EditorActions
           editMode={editMode}
-          onEditModeChange={() => setEditMode(prevState => !prevState)}
+          onEditModeChange={() => dispatch(tooglePreviewNote())}
           onSplit={() => setSplitPanel(prevState => !prevState)}
           onSave={() => dispatch(saveNote())}
-          onDelete={() => dispatch(deleteNote())}
+          onDelete={deleteNoteHandler}
         />
       </div>
     </div>

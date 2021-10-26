@@ -1,22 +1,32 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowCircleLeft, faArrowCircleRight } from '@fortawesome/free-solid-svg-icons';
-import '../styles/panels.css';
+import { ArrowLeftCircle, ArrowRightCircle } from 'react-feather';
+import '../styles/panels.scss';
 
 export default function SidePanel(props) {
   const { canIconify, iconify, canClose } = props;
   // const panelWidth = props.width || '';
 
-  const IconifyIcon = iconify ? faArrowCircleRight : faArrowCircleLeft;
+  const IconifyIcon = iconify ? (
+    <ArrowRightCircle className="side-panel__action"
+      onClick={props.onIconify} />
+  ) : (
+    <ArrowLeftCircle className="side-panel__action"
+      onClick={props.onIconify} />
+  );
 
   return (
-    <aside className={`side-panel__container ${iconify ? 'iconify' : ''}`}>
+    <aside className={`
+      side-panel__container ${iconify ? 'iconify' : ''} ${props.className || ""}
+      `}>
       <div className={`side-panel__header ${iconify ? 'iconify' : ''}`}>
-        {canClose && <FontAwesomeIcon className="side-panel__action"
-          onClick={props.onPanelClose} icon={faArrowCircleLeft} />}
-        {canIconify && <FontAwesomeIcon className="side-panel__action"
-          onClick={props.onIconify} icon={IconifyIcon} />}
+        {canClose && <ArrowLeftCircle className="side-panel__action"
+          onClick={props.onPanelClose} />}
+        {canIconify && IconifyIcon}
       </div>
-      {props.children}
+      <div className={`
+        side-panel__body ${iconify ? 'iconify' : ''} ${props.bodyClassName || ""}
+        `}>
+        {props.children}
+      </div>
     </aside>
   );
 };

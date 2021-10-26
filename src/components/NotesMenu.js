@@ -12,7 +12,8 @@ function NotesMenu(props) {
   }
 
   return (
-    <SidePanel onPanelClose={props.onPanelClose} canClose>
+    <SidePanel onPanelClose={props.onPanelClose} canClose
+      bodyClassName="scroll-y">
       {notesList.map((n, i) => (
         <NoteItem key={i}
           onItemClick={props.onNoteSelected.bind(this, n.filename)}

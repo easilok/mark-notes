@@ -1,3 +1,4 @@
+@import './_variables.scss';
 .note-item {
   border: black 1px solid;
   padding: .75rem;
@@ -6,8 +7,9 @@
   cursor: pointer;
 }
 
-.note-item:hover {
-  background-color: blue;
+.note-item:hover,
+.menu-item:hover {
+  background-color: $app-palette-dark;
 }
 
 .menu-item {
@@ -18,8 +20,7 @@
 }
 
 .menu-item:hover {
-  background: blue;
-  color: red;
+  color: $app-palette-primary;
 }
 
 .note-item__info {

@@ -2,46 +2,59 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const NOTE_DATA_STORE_KEY = "noteData";
 
+const getNoteFilepath = (filename) => {
+  if (filename.endsWith(".md")) {
+    return filename;
+  }
+  return filename + ".md";
+}
+
 const removeNoteFromStorage = (state) => {
   if (state.filename.length > 0) {
-    localStorage.removeItem(state.filename);
+    const filepath = getNoteFilepath(state.filename);
+    localStorage.removeItem(filepath);
   }
-  const newNoteList = state.list.filter(n => n.filename !== state.filename);
-  state.list = newNoteList;
+  const newNoteList = state.notes.filter(n => n.filename !== state.filename);
+  state.notes = newNoteList;
   localStorage.setItem(NOTE_DATA_STORE_KEY, JSON.stringify({
     categories: state.categories,
-    notes: state.list
+    notes: state.notes
   }));
 }
 
 const saveNoteToStorage = (state) => {
   if (state.filename.length > 0) {
-    localStorage.setItem(state.filename, state.noteContent);
+    const filepath = getNoteFilepath(state.filename);
+    localStorage.setItem(filepath, state.noteContent);
   }
-  const noteIndex = state.list.findIndex(n => n.filename === state.filename);
+  const noteIndex = state.notes.findIndex(n => n.filename === state.filename);
   let noteTitle = '';
   if (state.noteContent.length > 0) {
     noteTitle = state.noteContent.split('\n')[0];
     noteTitle = noteTitle.replace('#', '').trim();
   }
   if (noteIndex < 0) {
-    state.list.push({
+    state.notes.push({
       filename: state.filename,
       title: noteTitle
     });
   } else {
-    state.list[noteIndex].title = noteTitle;
+    state.notes[noteIndex].title = noteTitle;
   }
+  saveNotesListToStorage(state);
+};
+
+const saveNotesListToStorage = (state) => {
   localStorage.setItem(NOTE_DATA_STORE_KEY, JSON.stringify({
     categories: state.categories,
-    notes: state.list
+    notes: state.notes
   }));
 };
 
 export const notesSlice = createSlice({
   name: 'notes',
   initialState: {
-    list: [],
+    notes: [],
     categories: [],
     filename: '',
     noteContent: '',
@@ -52,18 +65,41 @@ export const notesSlice = createSlice({
       const noteData = localStorage.getItem(NOTE_DATA_STORE_KEY);
       const parsedNoteData = JSON.parse(noteData);
       if (parsedNoteData) {
-        state.list = parsedNoteData.notes;
+        state.notes = parsedNoteData.notes;
         state.categories = parsedNoteData.categories;
       } else {
-        state.list = [];
+        state.notes = [];
         state.categories = [];
       }
-      console.log("store notes", state.list);
+      console.log("store notes", state.notes);
+    },
+    scanNotes: (state) => {
+      const storageKeys = Object.keys(localStorage);
+      const storageMissingDocs = [];
+      storageKeys.forEach(key => {
+        if (key.endsWith('.md')) {
+          const noteIndex = state.notes.findIndex(
+            n => getNoteFilepath(n.filename) === key
+          );
+          if (noteIndex < 0) {
+            storageMissingDocs.push({
+              filename: key,
+              title: ''
+            });
+          }
+        }
+      });
+      state.notes = [
+        ...state.notes,
+        ...storageMissingDocs
+      ];
+      saveNotesListToStorage(state);
     },
     openNote: (state, action) => {
       // getting stored value
-      const selectedNote = localStorage.getItem(action.payload);
       state.filename = action.payload;
+      const filepath = getNoteFilepath(state.filename);
+      const selectedNote = localStorage.getItem(filepath);
       state.noteContent = selectedNote || '';
       console.log("note title", state.noteContent.split('\n'));
     },
@@ -87,6 +123,8 @@ export const notesSlice = createSlice({
       state.noteContent = '';
     },
     deleteNote: (state) => {
+      state.filename = '';
+      state.noteContent = '';
       removeNoteFromStorage(state);
     }
   },
@@ -95,7 +133,7 @@ export const notesSlice = createSlice({
 // Action creators are generated for each case reducer function
 export const {
   loadNotes, openNote, saveNote, setFilename,
-  setNoteContent, newNote, deleteNote
+  setNoteContent, newNote, deleteNote, scanNotes
 } =
   notesSlice.actions
 

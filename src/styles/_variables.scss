@@ -1,0 +1,49 @@
+// Font
+$sans-serif: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 
+  'Cantarell', 'Fira Sans', 'Droid Sans', sans-serif;
+
+$monospace: Menlo, Monaco, Consolas, 'Courier New', monospace;
+
+// Colors
+$material-primary: #BB86FC;
+$material-p-variant: #3700B3;
+$material-secondary: #03DAC6;
+$material-background: #121212;
+$material-error: #CF6679;
+
+// Make the secondary are the same colors @ 50% transparency. 
+
+// Black-Navy-Orange palette
+// $app-palette-darkest: #082032;
+// $app-palette-dark: #2C394B;
+// $app-palette-medium: #334756;
+// $app-palette-primary: #FF4C29;
+// $app-palette-light: #FFFFFF;
+
+// Black-Grey-Red palette
+// $app-palette-darkest: #171717;
+// $app-palette-dark: #444444;
+// $app-palette-medium: #444444;
+// $app-palette-primary: #DA0037;
+// $app-palette-light: #EDEDED;
+
+// Black-Grey-Orange palette
+$app-palette-darkest: #222831;
+$app-palette-dark: #393E46;
+$app-palette-medium: #393E46;
+$app-palette-primary: #D65A31;
+$app-palette-light: #EEEEEE;
+
+$palette-pink: #E91E63;
+$palette-pink-dark: #C21858;
+$palette-purple: #9C2780;
+$palette-purple-dark: #572780;
+$palette-blue-dark: #272A80;
+$palette-blue: #276880;
+$palette-blue-light: #57ACDC;
+$palette-green-light: #570CBE;
+$palette-green: #60C689;
+
+$app-bg-color: $app-palette-darkest;
+// this is the one that comes with the package
+$app-codemirror-default-bg: #282c34; 

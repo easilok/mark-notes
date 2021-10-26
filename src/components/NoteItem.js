@@ -1,4 +1,4 @@
-import '../styles/menu-item.css';
+import '../styles/menu-item.scss';
 
 function NoteItem(props) {
   return (

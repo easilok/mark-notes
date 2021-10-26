@@ -1,0 +1,15 @@
+@import './_variables.scss';
+* {
+  box-sizing: border-box;
+}
+
+body {
+  // background-color: #282c34;
+  background-color: $app-bg-color;
+  color: $app-palette-light;
+}
+
+.App {
+  display: flex;
+}
+

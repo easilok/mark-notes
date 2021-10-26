@@ -1,15 +1,33 @@
+@import './_variables.scss';
+
 .side-panel__container {
   height: 100vh;
   width: auto;
   max-width: 200px;
-  color: white;
-  border: #ccc 1px solid;
+  color: inherit;
+  // border: #ccc 1px solid;
+  display: flex;
+  flex-direction: column;
 }
 
 .side-panel__header {
   display: flex;
   justify-content: flex-end;
   padding: .75rem;
+}
+
+.side-panel__body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.scroll-y {
+  overflow-y: auto;
 }
 
 .side-panel__header.iconify {
@@ -24,7 +42,7 @@
 }
 
 .side-panel__action:hover {
-  color: red;
+  color: $app-palette-primary;
 }
 
 .note-page {

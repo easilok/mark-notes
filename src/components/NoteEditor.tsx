@@ -2,7 +2,12 @@ import CodeMirror from '@uiw/react-codemirror';
 import { markdown } from '@codemirror/lang-markdown';
 import { oneDark } from "@codemirror/theme-one-dark";
 
-export default function App(props) {
+interface NoteEditorProps {
+  noteContent: string;
+  onChange: (value: string) => void;
+}
+
+const NoteEditor: React.FC<NoteEditorProps> = (props) => {
   const { noteContent, onChange } = props;
 
   return (
@@ -11,9 +16,11 @@ export default function App(props) {
       theme='dark'
       className='editor__edit'
       extensions={[oneDark, markdown()]}
-      onChange={(value, viewUpdate) => {
+      onChange={(value, _) => {
         onChange(value);
       }}
     />
   );
 }
+
+export default NoteEditor;

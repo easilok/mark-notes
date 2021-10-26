@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import Swal from 'sweetalert2';
+// import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../hooks/store';
 
 import {
   saveNote, setNoteContent, deleteNote
@@ -10,34 +10,27 @@ import NotePreview from '../components/NotePreview';
 import NoteEditor from '../components/NoteEditor';
 import EditorActions from '../components/EditorActions';
 
+import { SwalConfirm, SwalToast } from '../helpers/SweetAlert';
+
 import '../styles/editor.scss';
 
 function Editor() {
-  const noteText = useSelector(state => state.notes.noteContent);
-  const editMode = useSelector(state => !state.settings.previewNote);
+  const noteText = useAppSelector(state => state.notes.noteContent);
+  const editMode = useAppSelector(state => !state.settings.previewNote);
   const [splitPanel, setSplitPanel] = useState(false);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const deleteNoteHandler = () => {
-    Swal.fire({
+    SwalConfirm({
       title: 'Delete Note',
       text: 'Are you sure you want to delete this note?',
       icon: 'warning',
-      allowEnterKey: false,
-      showCancelButton: true,
-      showConfirmButton: true,
-      focusCancel: true,
-      focusConfirm: false,
     })
       .then(result => {
         if (result.isConfirmed) {
           dispatch(deleteNote());
-          Swal.fire({
+          SwalToast({
             title: 'Note Deleted!',
-            icon: 'success',
-            toast: true,
-            position: 'bottom-right',
-            timer: 3000,
           });
         }
       });
@@ -66,6 +59,8 @@ function Editor() {
           onSplit={() => setSplitPanel(prevState => !prevState)}
           onSave={() => dispatch(saveNote())}
           onDelete={deleteNoteHandler}
+          onFavorite={() => { }}
+          onCategoryChange={() => { }}
         />
       </div>
     </div>

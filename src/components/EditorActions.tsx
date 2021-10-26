@@ -3,7 +3,17 @@ import {
   Save, Trash2
 } from 'react-feather';
 
-export default function EditorActions(props) {
+interface EditorActionsProps {
+  editMode: boolean;
+  onSplit: () => void;
+  onFavorite: () => void;
+  onCategoryChange: () => void;
+  onEditModeChange: () => void;
+  onSave: () => void;
+  onDelete: () => void;
+};
+
+export default function EditorActions(props: EditorActionsProps) {
   const { editMode } = props;
 
   const EditModeIcon = editMode ? (

@@ -1,4 +1,5 @@
 @import './takenote_variables.scss';
+@import './_variables.scss';
 .tk_previewer {
   position: relative;
   max-height: calc(100vh);
@@ -218,7 +219,8 @@
 }
 .tk_dark {
   .tk_previewer {
-    background: darken($dark-editor, 5%);
+    // background: darken($dark-editor, 5%);
+    background-color: $app-codemirror-default-bg;
     color: $light-font-color;
 
     a {
@@ -267,3 +269,4 @@
     }
   }
 }
+

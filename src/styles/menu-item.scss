@@ -1,6 +1,6 @@
 @import './_variables.scss';
 .note-item {
-  border: black 1px solid;
+  border-bottom: $app-palette-medium 1px solid;
   padding: .75rem;
   display: flex;
   justify-content: space-between;
@@ -39,7 +39,7 @@
 }
 
 .note-item__info h5 {
-  color: #ccc;
+  color: darken($app-palette-light, 50%);
   margin: 0;
   font-size: 0.75rem;
   /* line-height: 1.75rem; */
@@ -51,4 +51,8 @@
 .note-item__action {
   display: none;
   width: 20px;
+}
+
+.note-section {
+  border-top: $app-palette-medium 1px solid;
 }

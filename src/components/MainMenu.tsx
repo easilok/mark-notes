@@ -2,7 +2,8 @@ import React, { useState, useCallback } from 'react';
 import {
   Book, PlusCircle, Bookmark, UploadCloud
 } from 'react-feather';
-import { useSelector, useDispatch } from 'react-redux';
+// import { useSelector, useDispatch } from 'react-redux';
+import { useAppSelector, useAppDispatch } from '../hooks/store';
 import {
   loadNotes, newNote, openNote, scanNotes
 } from '../store/slices/notesSlice';
@@ -11,12 +12,13 @@ import { setPreviewNote } from '../store/slices/settingsSlice';
 import SidePanel from '../containers/SidePanel';
 import NotesMenu from './NotesMenu';
 import MenuItem from './MenuItem';
+import { SwalConfirm, SwalToast } from '../helpers/SweetAlert';
 
 function MainMenu() {
   const [showNotesList, setShowNotesList] = useState(false);
   const [minimizeMenu, setMinimizeMenu] = useState(true);
-  const notesList = useSelector(state => state.notes.notes);
-  const dispatch = useDispatch();
+  const notesList = useAppSelector(state => state.notes.notes);
+  const dispatch = useAppDispatch();
 
   const notesClickHandler = useCallback(() => {
     console.log("dispatching load notes");
@@ -35,8 +37,19 @@ function MainMenu() {
   const onScanFilesHandler = useCallback(() => {
     // Maybe show full sidebar
     // Dispatch load files from storate
-    dispatch(loadNotes());
-    dispatch(scanNotes());
+    SwalConfirm({
+      title: 'Scan lost notes',
+      text: 'Are you sure you want to scan and add lost notes?',
+    })
+      .then(result => {
+        if (result.isConfirmed) {
+          dispatch(loadNotes());
+          dispatch(scanNotes());
+          SwalToast({
+            title: 'Scanned lost notes.',
+          });
+        }
+      })
   }, [dispatch]);
 
   return (
@@ -73,7 +86,7 @@ function MainMenu() {
         isVisible={showNotesList}
         notesList={notesList}
         onPanelClose={() => setShowNotesList(false)}
-        onNoteSelected={(filename) => {
+        onNoteSelected={(filename: string) => {
           console.log("Dispatched open ", filename);
           setShowNotesList(false);
           dispatch(setPreviewNote(true));

@@ -1,4 +1,13 @@
-function MenuItem(props) {
+import React from 'react';
+
+interface MenuItemProps {
+  title: string;
+  iconify: boolean;
+  onMenuClick: () => void;
+  icon: React.ReactElement;
+}
+
+const MenuItem: React.FC<MenuItemProps> = (props) => {
   const { iconify } = props;
   return (
     <div className={`menu-item ${iconify ? 'iconify' : ''}`}

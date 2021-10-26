@@ -1,7 +1,17 @@
 import { ArrowLeftCircle, ArrowRightCircle } from 'react-feather';
 import '../styles/panels.scss';
 
-export default function SidePanel(props) {
+interface SidePanelProps {
+  canIconify?: boolean;
+  iconify?: boolean;
+  canClose?: boolean;
+  className?: string;
+  bodyClassName?: string;
+  onIconify?: () => void;
+  onPanelClose?: () => void;
+}
+
+const SidePanel: React.FC<SidePanelProps> = (props) => {
   const { canIconify, iconify, canClose } = props;
   // const panelWidth = props.width || '';
 
@@ -30,3 +40,5 @@ export default function SidePanel(props) {
     </aside>
   );
 };
+
+export default SidePanel;

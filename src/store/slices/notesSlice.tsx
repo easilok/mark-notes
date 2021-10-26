@@ -1,17 +1,19 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { RootState } from '../store';
+import { Note } from '../../models/Note';
 
 const NOTE_DATA_STORE_KEY = "noteData";
 
-const getNoteFilepath = (filename) => {
-  if (filename.endsWith(".md")) {
-    return filename;
-  }
-  return filename + ".md";
+export interface NoteState {
+  notes: Note[];
+  categories: string[];
+  filename: string;
+  noteContent: string;
 }
 
-const removeNoteFromStorage = (state) => {
+const removeNoteFromStorage = (state: NoteState) => {
   if (state.filename.length > 0) {
-    const filepath = getNoteFilepath(state.filename);
+    const filepath = Note.getFilepath(state.filename);
     localStorage.removeItem(filepath);
   }
   const newNoteList = state.notes.filter(n => n.filename !== state.filename);
@@ -22,9 +24,9 @@ const removeNoteFromStorage = (state) => {
   }));
 }
 
-const saveNoteToStorage = (state) => {
+const saveNoteToStorage = (state: NoteState) => {
   if (state.filename.length > 0) {
-    const filepath = getNoteFilepath(state.filename);
+    const filepath = Note.getFilepath(state.filename);
     localStorage.setItem(filepath, state.noteContent);
   }
   const noteIndex = state.notes.findIndex(n => n.filename === state.filename);
@@ -44,25 +46,30 @@ const saveNoteToStorage = (state) => {
   saveNotesListToStorage(state);
 };
 
-const saveNotesListToStorage = (state) => {
+const saveNotesListToStorage = (state: NoteState) => {
   localStorage.setItem(NOTE_DATA_STORE_KEY, JSON.stringify({
     categories: state.categories,
     notes: state.notes
   }));
 };
 
+const initialState: NoteState = {
+  notes: [],
+  categories: [],
+  filename: '',
+  noteContent: '',
+}
+
 export const notesSlice = createSlice({
   name: 'notes',
-  initialState: {
-    notes: [],
-    categories: [],
-    filename: '',
-    noteContent: '',
-  },
+  initialState,
   reducers: {
     loadNotes: (state) => {
       // getting stored value
       const noteData = localStorage.getItem(NOTE_DATA_STORE_KEY);
+      if (!noteData) {
+        return;
+      }
       const parsedNoteData = JSON.parse(noteData);
       if (parsedNoteData) {
         state.notes = parsedNoteData.notes;
@@ -75,11 +82,11 @@ export const notesSlice = createSlice({
     },
     scanNotes: (state) => {
       const storageKeys = Object.keys(localStorage);
-      const storageMissingDocs = [];
+      const storageMissingDocs: Note[] = [];
       storageKeys.forEach(key => {
         if (key.endsWith('.md')) {
           const noteIndex = state.notes.findIndex(
-            n => getNoteFilepath(n.filename) === key
+            n => Note.getFilepath(n.filename) === key
           );
           if (noteIndex < 0) {
             storageMissingDocs.push({
@@ -95,10 +102,10 @@ export const notesSlice = createSlice({
       ];
       saveNotesListToStorage(state);
     },
-    openNote: (state, action) => {
+    openNote: (state, action: PayloadAction<string>) => {
       // getting stored value
       state.filename = action.payload;
-      const filepath = getNoteFilepath(state.filename);
+      const filepath = Note.getFilepath(state.filename);
       const selectedNote = localStorage.getItem(filepath);
       state.noteContent = selectedNote || '';
       console.log("note title", state.noteContent.split('\n'));
@@ -107,7 +114,7 @@ export const notesSlice = createSlice({
       console.log("Save note", state);
       saveNoteToStorage(state);
     },
-    setFilename: (state, action) => {
+    setFilename: (state, action: PayloadAction<string>) => {
       removeNoteFromStorage(state);
       state.filename = action.payload;
       saveNoteToStorage(state);
@@ -123,9 +130,9 @@ export const notesSlice = createSlice({
       state.noteContent = '';
     },
     deleteNote: (state) => {
+      removeNoteFromStorage(state);
       state.filename = '';
       state.noteContent = '';
-      removeNoteFromStorage(state);
     }
   },
 })
@@ -134,7 +141,8 @@ export const notesSlice = createSlice({
 export const {
   loadNotes, openNote, saveNote, setFilename,
   setNoteContent, newNote, deleteNote, scanNotes
-} =
-  notesSlice.actions
+} = notesSlice.actions;
+
+export const selectNotes = (state: RootState) => state.notes.notes;
 
 export default notesSlice.reducer

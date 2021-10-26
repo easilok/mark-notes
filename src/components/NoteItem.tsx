@@ -1,6 +1,12 @@
 import '../styles/menu-item.scss';
 
-function NoteItem(props) {
+interface NoteItemProps {
+  title: string;
+  filename: string;
+  onItemClick: () => void;
+}
+
+const NoteItem: React.FC<NoteItemProps> = (props) => {
   return (
     <div className="note-item" onClick={props.onItemClick}>
       <div className="note-item__info">

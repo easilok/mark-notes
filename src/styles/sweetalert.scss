@@ -1,23 +1,23 @@
 @import './_variables.scss';
 
 .swal2-container.swal2-backdrop-show {
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.8) !important;
 }
 
 .swal2-popup,
 .swal2-popup.swal2-toast {
-  background: $app-bg-color;
+  background: $app-bg-color !important;
 }
 
 .swal2-title,
 .swal2-html-container {
-  color: $app-palette-light;
+  color: $app-palette-light !important;
 }
 
 .swal2-styled.swal2-confirm {
-  background-color: $app-palette-primary;
+  background-color: $app-palette-primary !important;
 }
 
 .swal2-timer-progress-bar {
-  background-color: $app-palette-primary;
+  background-color: $app-palette-primary !important;
 }

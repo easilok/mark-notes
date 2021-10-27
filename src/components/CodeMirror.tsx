@@ -36,6 +36,7 @@ const CodeMirror = ({ value = "", onUpdate = undefined, className = '', ...props
     const view = new EditorView({ state, parent: currentEditor });
 
     return () => view.destroy();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editor]);
 
   return <div ref={editor} className={className} />;

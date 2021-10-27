@@ -1,12 +1,12 @@
 import React from 'react';
 
-import { Note } from '../models/Note';
+import { NoteInformation } from '../models/NoteInformation';
 
 import SidePanel from '../containers/SidePanel';
 import NoteItem from './NoteItem';
 
 interface NotesMenuProps {
-  notesList: Note[];
+  notesList: NoteInformation[];
   isVisible: boolean;
   onPanelClose: () => void;
   onNoteSelected: (filename: string) => void;

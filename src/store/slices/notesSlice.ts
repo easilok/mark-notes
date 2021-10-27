@@ -1,19 +1,22 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../store';
-import { Note } from '../../models/Note';
+import { NoteInformation } from '../../models/NoteInformation';
 
 const NOTE_DATA_STORE_KEY = "noteData";
 
-export interface NoteState {
-  notes: Note[];
+export interface ApplicationData {
+  notes: NoteInformation[];
   categories: string[];
+}
+
+export interface NoteState extends ApplicationData {
   filename: string;
   noteContent: string;
 }
 
 const removeNoteFromStorage = (state: NoteState) => {
   if (state.filename.length > 0) {
-    const filepath = Note.getFilepath(state.filename);
+    const filepath = NoteInformation.getFilepath(state.filename);
     localStorage.removeItem(filepath);
   }
   const newNoteList = state.notes.filter(n => n.filename !== state.filename);
@@ -28,7 +31,7 @@ const saveNoteToStorage = (state: NoteState) => {
   if (state.filename.length === 0) {
     return;
   }
-  const filepath = Note.getFilepath(state.filename);
+  const filepath = NoteInformation.getFilepath(state.filename);
   localStorage.setItem(filepath, state.noteContent);
   const noteIndex = state.notes.findIndex(n => n.filename === state.filename);
   let noteTitle = '';
@@ -47,7 +50,7 @@ const saveNoteToStorage = (state: NoteState) => {
   saveNotesListToStorage(state);
 };
 
-const saveNotesListToStorage = (state: NoteState) => {
+const saveNotesListToStorage = (state: ApplicationData) => {
   localStorage.setItem(NOTE_DATA_STORE_KEY, JSON.stringify({
     categories: state.categories,
     notes: state.notes
@@ -83,11 +86,11 @@ export const notesSlice = createSlice({
     },
     scanNotes: (state) => {
       const storageKeys = Object.keys(localStorage);
-      const storageMissingDocs: Note[] = [];
+      const storageMissingDocs: NoteInformation[] = [];
       storageKeys.forEach(key => {
         if (key.endsWith('.md')) {
           const noteIndex = state.notes.findIndex(
-            n => Note.getFilepath(n.filename) === key
+            n => NoteInformation.getFilepath(n.filename) === key
           );
           if (noteIndex < 0) {
             storageMissingDocs.push({
@@ -106,7 +109,7 @@ export const notesSlice = createSlice({
     openNote: (state, action: PayloadAction<string>) => {
       // getting stored value
       state.filename = action.payload;
-      const filepath = Note.getFilepath(state.filename);
+      const filepath = NoteInformation.getFilepath(state.filename);
       const selectedNote = localStorage.getItem(filepath);
       state.noteContent = selectedNote || '';
       console.log("note title", state.noteContent.split('\n'));
@@ -134,14 +137,25 @@ export const notesSlice = createSlice({
       removeNoteFromStorage(state);
       state.filename = '';
       state.noteContent = '';
-    }
+    },
+    finishLoadNotes: (state, { payload }: PayloadAction<ApplicationData | null>) => {
+      if (!payload) {
+        state.notes = [];
+        state.categories = [];
+      } else {
+        state.notes = payload.notes;
+        state.categories = payload.categories;
+      }
+    },
+
   },
 })
 
 // Action creators are generated for each case reducer function
 export const {
   loadNotes, openNote, saveNote, setFilename,
-  setNoteContent, newNote, deleteNote, scanNotes
+  setNoteContent, newNote, deleteNote, scanNotes,
+  finishLoadNotes
 } = notesSlice.actions;
 
 export const selectNotes = (state: RootState) => state.notes.notes;

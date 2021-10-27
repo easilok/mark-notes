@@ -1,5 +1,5 @@
-export class Note {
-  constructor(public filename: string, public content: string) { };
+export class NoteInformation {
+  constructor(public filename: string, public title: string) { };
 
   static getFilepath(filename: string) {
     if (filename.endsWith(".md")) {

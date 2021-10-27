@@ -7,7 +7,7 @@ import { useAppSelector, useAppDispatch } from '../hooks/store';
 import {
   loadNotes, newNote, openNote, scanNotes
 } from '../store/slices/notesSlice';
-import { setPreviewNote } from '../store/slices/settingsSlice';
+import { setPreviewNote, toogleMenuCollapsed } from '../store/slices/settingsSlice';
 
 import SidePanel from '../containers/SidePanel';
 import NotesMenu from './NotesMenu';
@@ -16,7 +16,7 @@ import { SwalConfirm, SwalToast } from '../helpers/SweetAlert';
 
 function MainMenu() {
   const [showNotesList, setShowNotesList] = useState(false);
-  const [minimizeMenu, setMinimizeMenu] = useState(true);
+  const minimizeMenu = useAppSelector(state => state.settings.general.menuCollapsed);
   const notesList = useAppSelector(state => state.notes.notes);
   const dispatch = useAppDispatch();
 
@@ -55,7 +55,7 @@ function MainMenu() {
   return (
     <React.Fragment>
       <SidePanel canIconify iconify={minimizeMenu}
-        onIconify={() => setMinimizeMenu(!minimizeMenu)}
+        onIconify={() => dispatch(toogleMenuCollapsed())}
         bodyClassName="flex-1">
         <section>
           <MenuItem onMenuClick={newNoteHandler}

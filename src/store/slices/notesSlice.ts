@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../store';
 import { NoteInformation } from '../../models/NoteInformation';
+import { NoteInterface, convertFilepath, convertTitle } from '../../models/Note';
 
 const NOTE_DATA_STORE_KEY = "noteData";
 
@@ -10,16 +11,17 @@ export interface ApplicationData {
 }
 
 export interface NoteState extends ApplicationData {
-  filename: string;
-  noteContent: string;
+  currentNote: NoteInterface;
 }
 
 const removeNoteFromStorage = (state: NoteState) => {
-  if (state.filename.length > 0) {
-    const filepath = NoteInformation.getFilepath(state.filename);
+  if (state.currentNote.filename.length > 0) {
+    const filepath = convertFilepath(state.currentNote.filename);
     localStorage.removeItem(filepath);
   }
-  const newNoteList = state.notes.filter(n => n.filename !== state.filename);
+  const newNoteList = state.notes.filter(
+    n => n.filename !== state.currentNote.filename
+  );
   state.notes = newNoteList;
   localStorage.setItem(NOTE_DATA_STORE_KEY, JSON.stringify({
     categories: state.categories,
@@ -28,21 +30,19 @@ const removeNoteFromStorage = (state: NoteState) => {
 }
 
 const saveNoteToStorage = (state: NoteState) => {
-  if (state.filename.length === 0) {
+  if (state.currentNote.filename.length === 0) {
     return;
   }
-  const filepath = NoteInformation.getFilepath(state.filename);
-  localStorage.setItem(filepath, state.noteContent);
-  const noteIndex = state.notes.findIndex(n => n.filename === state.filename);
-  let noteTitle = '';
-  if (state.noteContent.length > 0) {
-    noteTitle = state.noteContent.split('\n')[0];
-    noteTitle = noteTitle.replace('#', '').trim();
-  }
+  const filepath = convertFilepath(state.currentNote.filename);
+  const noteTitle = convertTitle(state.currentNote.content);
+  localStorage.setItem(filepath, state.currentNote.content);
+  const noteIndex = state.notes.findIndex(
+    n => n.filename === state.currentNote.filename
+  );
   if (noteIndex < 0) {
     state.notes.push({
-      filename: state.filename,
-      title: noteTitle
+      filename: state.currentNote.filename,
+      title: noteTitle,
     });
   } else {
     state.notes[noteIndex].title = noteTitle;
@@ -60,8 +60,10 @@ const saveNotesListToStorage = (state: ApplicationData) => {
 const initialState: NoteState = {
   notes: [],
   categories: [],
-  filename: '',
-  noteContent: '',
+  currentNote: {
+    filename: '',
+    content: ''
+  },
 }
 
 export const notesSlice = createSlice({
@@ -108,11 +110,11 @@ export const notesSlice = createSlice({
     },
     openNote: (state, action: PayloadAction<string>) => {
       // getting stored value
-      state.filename = action.payload;
-      const filepath = NoteInformation.getFilepath(state.filename);
-      const selectedNote = localStorage.getItem(filepath);
-      state.noteContent = selectedNote || '';
-      console.log("note title", state.noteContent.split('\n'));
+      state.currentNote.filename = action.payload;
+      const selectedNote = localStorage.getItem(
+        convertFilepath(state.currentNote.filename)
+      );
+      state.currentNote.content = selectedNote || '';
     },
     saveNote: (state) => {
       console.log("Save note", state);
@@ -120,23 +122,27 @@ export const notesSlice = createSlice({
     },
     setFilename: (state, action: PayloadAction<string>) => {
       removeNoteFromStorage(state);
-      state.filename = action.payload;
+      state.currentNote.filename = action.payload;
       saveNoteToStorage(state);
     },
     setNoteContent: (state, action) => {
       console.log("Set note content", action);
-      state.noteContent = action.payload;
+      state.currentNote.content = action.payload;
       saveNoteToStorage(state);
     },
     newNote: (state) => {
       saveNoteToStorage(state);
-      state.filename = new Date().toISOString();
-      state.noteContent = '';
+      state.currentNote = {
+        filename: new Date().toISOString(),
+        content: ''
+      };
     },
     deleteNote: (state) => {
       removeNoteFromStorage(state);
-      state.filename = '';
-      state.noteContent = '';
+      state.currentNote = {
+        filename: '',
+        content: ''
+      };
     },
     finishLoadNotes: (state, { payload }: PayloadAction<ApplicationData | null>) => {
       if (!payload) {

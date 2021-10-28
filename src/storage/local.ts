@@ -1,6 +1,6 @@
 import { ApplicationData } from '../store/slices/notesSlice';
 import { ApplicationSettings } from '../store/slices/settingsSlice';
-import { Note } from '../models/Note';
+import { NoteInterface, convertFilepath } from '../models/Note';
 
 export enum STORAGE_DATA_TYPE {
   APPLICATION_SETTINGS,
@@ -13,7 +13,7 @@ const STORAGE_FIELD = {
   [STORAGE_DATA_TYPE.APPLICATION_NOTES]: 'noteData',
 };
 
-type StoragePayload = ApplicationData | ApplicationSettings | Note;
+type StoragePayload = ApplicationData | ApplicationSettings | NoteInterface;
 
 export function saveDataToStorage<T extends StoragePayload>(
   type: STORAGE_DATA_TYPE, data: T): void {
@@ -25,8 +25,8 @@ export function saveDataToStorage<T extends StoragePayload>(
       localStorage.setItem(STORAGE_FIELD[type], JSON.stringify(data));
       break;
     case STORAGE_DATA_TYPE.NOTE:
-      const { filename, content } = data as Note;
-      localStorage.setItem(Note.getFilepath(filename), content);
+      const { filename, content } = data as NoteInterface;
+      localStorage.setItem(convertFilepath(filename), content);
       break;
     default:
       return;

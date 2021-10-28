@@ -15,7 +15,7 @@ import { SwalConfirm, SwalToast } from '../helpers/SweetAlert';
 import '../styles/editor.scss';
 
 function Editor() {
-  const noteText = useAppSelector(state => state.notes.noteContent);
+  const noteText = useAppSelector(state => state.notes.currentNote.content);
   const editMode = useAppSelector(state => !state.settings.previewNote);
   const [splitPanel, setSplitPanel] = useState(false);
   const dispatch = useAppDispatch();

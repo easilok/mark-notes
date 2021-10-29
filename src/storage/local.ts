@@ -1,4 +1,4 @@
-import { ApplicationData } from '../store/slices/notesSlice';
+import { ApplicationData } from '../types';
 import { ApplicationSettings } from '../store/slices/settingsSlice';
 import { NoteInterface, convertFilepath } from '../models/Note';
 

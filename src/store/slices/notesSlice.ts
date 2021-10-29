@@ -1,14 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../store';
-import { NoteInformation } from '../../models/NoteInformation';
-import { NoteInterface, convertFilepath, convertTitle } from '../../models/Note';
+import { 
+  NoteInterface, NoteInformation,
+  convertFilepath, convertTitle 
+} from '../../models/Note';
+
+import {
+  ApplicationData
+} from '../../types';
 
 const NOTE_DATA_STORE_KEY = "noteData";
-
-export interface ApplicationData {
-  notes: NoteInformation[];
-  categories: string[];
-}
 
 export interface NoteState extends ApplicationData {
   currentNote: NoteInterface;
@@ -47,7 +48,7 @@ const saveNoteToStorage = (state: NoteState) => {
   } else {
     state.notes[noteIndex].title = noteTitle;
   }
-  saveNotesListToStorage(state);
+  // saveNotesListToStorage(state);
 };
 
 const saveNotesListToStorage = (state: ApplicationData) => {
@@ -92,7 +93,7 @@ export const notesSlice = createSlice({
       storageKeys.forEach(key => {
         if (key.endsWith('.md')) {
           const noteIndex = state.notes.findIndex(
-            n => NoteInformation.getFilepath(n.filename) === key
+            n => convertFilepath(n.filename) === key
           );
           if (noteIndex < 0) {
             storageMissingDocs.push({

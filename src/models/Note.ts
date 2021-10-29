@@ -1,3 +1,8 @@
+export interface NoteInformation {
+  filename: string; 
+  title: string;
+}
+
 export interface NoteInterface {
   filename: string;
   content: string;
@@ -14,7 +19,8 @@ export function convertFilepath(filename: string): string {
 export function convertTitle(content: string): string {
   if (content.length > 0) {
     const title = content.split('\n')[0];
-    return title.replace('#', '').trim();
+    const regex = /#/g;
+    return title.replace(regex, '').trim();
   }
   return '';
 }

@@ -6,6 +6,7 @@ import {
   saveNote, setNoteContent, deleteNote
 } from '../store/slices/notesSlice';
 import { tooglePreviewNote } from '../store/slices/settingsSlice';
+import { sync } from '../store/slices/syncSlice';
 import NotePreview from '../components/NotePreview';
 import NoteEditor from '../components/NoteEditor';
 import EditorActions from '../components/EditorActions';
@@ -17,8 +18,17 @@ import '../styles/editor.scss';
 function Editor() {
   const noteText = useAppSelector(state => state.notes.currentNote.content);
   const editMode = useAppSelector(state => !state.settings.previewNote);
+  const { notes, categories } = useAppSelector(state => state.notes);
+  const lastSync = useAppSelector(state => state.sync.lastSync);
   const [splitPanel, setSplitPanel] = useState(false);
+ 
+  // dispatch function group
   const dispatch = useAppDispatch();
+  const _sync = () => dispatch(sync({notes, categories}));
+  const _saveNote = () => dispatch(saveNote());
+  const _deleteNote = () => dispatch(deleteNote());
+  const _togglePreview = () => dispatch(tooglePreviewNote());
+  const _setNoteContent = (value: string) => dispatch(setNoteContent(value));
 
   const deleteNoteHandler = () => {
     SwalConfirm({
@@ -28,7 +38,7 @@ function Editor() {
     })
       .then(result => {
         if (result.isConfirmed) {
-          dispatch(deleteNote());
+          _deleteNote();
           SwalToast({
             title: 'Note Deleted!',
           });
@@ -39,7 +49,7 @@ function Editor() {
   let editorComponent = null;
   if (splitPanel || editMode) {
     editorComponent = <NoteEditor noteContent={noteText}
-      onChange={value => dispatch(setNoteContent(value))} />;
+      onChange={value => _setNoteContent(value)} />;
   }
   let viewerComponent = null;
   if (splitPanel || !editMode) {
@@ -55,10 +65,12 @@ function Editor() {
       <div className="editor-actions__container">
         <EditorActions
           editMode={editMode}
-          onEditModeChange={() => dispatch(tooglePreviewNote())}
+          lastSync={lastSync}
+          onEditModeChange={_togglePreview}
           onSplit={() => setSplitPanel(prevState => !prevState)}
-          onSave={() => dispatch(saveNote())}
+          onSave={_saveNote}
           onDelete={deleteNoteHandler}
+          onSync={_sync}
           onFavorite={() => { }}
           onCategoryChange={() => { }}
         />

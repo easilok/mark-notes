@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { NoteInformation } from '../models/NoteInformation';
+import { NoteInformation } from '../models/Note';
 
 import SidePanel from '../containers/SidePanel';
 import NoteItem from './NoteItem';

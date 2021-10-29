@@ -5,12 +5,14 @@ import {
 
 interface EditorActionsProps {
   editMode: boolean;
+  lastSync: string;
   onSplit: () => void;
   onFavorite: () => void;
   onCategoryChange: () => void;
   onEditModeChange: () => void;
   onSave: () => void;
   onDelete: () => void;
+  onSync: () => void;
 };
 
 export default function EditorActions(props: EditorActionsProps) {
@@ -31,6 +33,9 @@ export default function EditorActions(props: EditorActionsProps) {
         <Layers onClick={props.onCategoryChange} />
       </section>
       <section>
+        <span onClick={props.onSync}>
+          {props.lastSync}
+        </span>
         <Save onClick={props.onSave} />
         <Trash2 onClick={props.onDelete} />
       </section>

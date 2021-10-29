@@ -52,14 +52,23 @@
 .editor-actions > section {
   display: flex;
   height: 100%;
+  align-items: center;
 }
 
 .editor-actions > section > * {
-  margin-right: 1rem;
+  margin-right: .75rem;
   height: 100%;
   cursor: pointer;
   width: 34px;
   padding: 0 6px;
+}
+
+.editor-actions > section > span {
+  width: auto;
+  height: auto;
+  font-size: .70rem;
+  font-style: italic;
+  color: #6a6a6a;
 }
 
 .editor-actions > section > *:last-child {

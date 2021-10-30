@@ -49,3 +49,44 @@
 .note-page {
   flex: 1;
 }
+
+.empty-page {
+  background-color: $app-codemirror-default-bg;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%
+}
+
+.empty-page__content {
+  text-align: center;
+  padding: 1rem;
+  h2 {
+    font-size: 1.5rem;
+  }
+  h4 {
+    font-size: 1rem;
+    color: #ccc;
+  }
+  button {
+    background-color: $app-palette-primary;
+    padding: 0.6rem;
+    outline: none;
+    border-radius: 10px;
+    border: $app-palette-primary 3px solid;
+    color: white;
+    display: flex;
+    align-items: center;
+    margin: 2rem auto;
+    cursor: pointer;
+    svg {
+      margin: 0 8px 0 0;
+    }
+    &:hover,
+    &:active, {
+      background-color: $app-palette-darkest;
+      border: $app-palette-primary 3px solid;
+      // color: $app-palette-primary;
+    }
+  }
+}

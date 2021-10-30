@@ -8,7 +8,9 @@
 }
 
 .note-item:hover,
-.menu-item:hover {
+.note-item:active,
+.menu-item:hover,
+.menu-item:active {
   background-color: $app-palette-dark;
 }
 
@@ -19,7 +21,9 @@
   align-items: center;
 }
 
-.menu-item:hover {
+.menu-item:hover,
+.menu-item:active,
+.menu-item.active{
   color: $app-palette-primary;
 }
 

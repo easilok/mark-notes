@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import {ApplicationData} from '../../types';
+import { SyncPayload } from '../../types';
 
 interface SyncState {
   syncing: boolean;
@@ -16,12 +16,12 @@ export const syncSlice = createSlice({
   name: 'sync',
   initialState,
   reducers: {
-    sync: (state, {payload}: PayloadAction<ApplicationData>) => {
+    sync: (state, { payload }: PayloadAction<SyncPayload>) => {
       state.syncing = true;
     },
     finishSync: (state) => {
       state.syncing = false;
-      state.lastSync = new Date().toLocaleString('en-GB', {dateStyle: 'short', timeStyle: 'short'});
+      state.lastSync = new Date().toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' });
       console.log("Sync: ", state.lastSync);
     }
   }

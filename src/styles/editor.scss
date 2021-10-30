@@ -17,6 +17,10 @@
   box-shadow: 5px 10px 10px rgba(0, 0, 0, 0.6);
 }
 
+.editor__split-panel.splitted .editor__edit {
+  border-right: $app-palette-medium 1px solid;
+}
+
 .editor__preview {
   // border: black 1px solid;
   /* border-radius: 10px; */
@@ -75,7 +79,12 @@
     margin-right: 0;
 }
 
-.editor-actions > section > *:hover {
+.editor-actions > section > *:hover,
+.editor-actions > section > *:active {
   color: $app-palette-primary;
   background-color: $app-palette-darkest;
+}
+
+.editor-actions > section > *.active {
+  color: $app-palette-primary;
 }

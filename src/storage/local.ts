@@ -1,4 +1,4 @@
-import { ApplicationData } from '../types';
+import { NotesLocalData } from '../types';
 import { ApplicationSettings } from '../store/slices/settingsSlice';
 import { NoteInterface, convertFilepath } from '../models/Note';
 
@@ -13,7 +13,7 @@ const STORAGE_FIELD = {
   [STORAGE_DATA_TYPE.APPLICATION_NOTES]: 'noteData',
 };
 
-type StoragePayload = ApplicationData | ApplicationSettings | NoteInterface;
+type StoragePayload = NotesLocalData | ApplicationSettings | NoteInterface;
 
 export function saveDataToStorage<T extends StoragePayload>(
   type: STORAGE_DATA_TYPE, data: T): void {

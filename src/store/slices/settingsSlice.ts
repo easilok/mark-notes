@@ -1,9 +1,13 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../store';
 
 import {
   STORAGE_DATA_TYPE, saveDataToStorage, getDataFromStorage
 } from '../../storage/local';
+
+import {
+  MENU_SELECTION
+} from '../../types';
 
 export interface ApplicationSettings {
   menuCollapsed: boolean;
@@ -12,6 +16,7 @@ export interface ApplicationSettings {
 interface SettingsState {
   general: ApplicationSettings;
   previewNote: boolean;
+  currentMenu: MENU_SELECTION;
 }
 
 const initialState: SettingsState = {
@@ -19,6 +24,7 @@ const initialState: SettingsState = {
     menuCollapsed: false,
   },
   previewNote: false,
+  currentMenu: MENU_SELECTION.NONE,
 }
 
 export const settingsSlice = createSlice({
@@ -41,11 +47,15 @@ export const settingsSlice = createSlice({
       state.general.menuCollapsed = !state.general.menuCollapsed;
       saveDataToStorage<ApplicationSettings>(STORAGE_DATA_TYPE.APPLICATION_SETTINGS, state.general);
     },
+    setCurrentMenu: (state, action: PayloadAction<MENU_SELECTION>) => {
+      state.currentMenu = action.payload;
+    },
   }
 });
 
 export const {
-  tooglePreviewNote, setPreviewNote, loadUserSettings, toogleMenuCollapsed
+  tooglePreviewNote, setPreviewNote, loadUserSettings, toogleMenuCollapsed,
+  setCurrentMenu,
 } = settingsSlice.actions;
 
 export const generalSettings = (state: RootState) => state.settings.general;

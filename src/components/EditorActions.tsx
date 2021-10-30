@@ -1,10 +1,11 @@
 import {
   Edit, Eye, Columns, Bookmark, Layers,
-  Save, Trash2
+  Trash2
 } from 'react-feather';
 
 interface EditorActionsProps {
   editMode: boolean;
+  favorite?: boolean;
   lastSync: string;
   onSplit: () => void;
   onFavorite: () => void;
@@ -17,6 +18,7 @@ interface EditorActionsProps {
 
 export default function EditorActions(props: EditorActionsProps) {
   const { editMode } = props;
+  const favorite = props.favorite || false;
 
   const EditModeIcon = editMode ? (
     <Eye onClick={props.onEditModeChange} />
@@ -29,14 +31,17 @@ export default function EditorActions(props: EditorActionsProps) {
       <section>
         {EditModeIcon}
         <Columns onClick={props.onSplit} />
-        <Bookmark onClick={props.onFavorite} />
+        <Bookmark onClick={props.onFavorite}
+          className={favorite ? 'active' : ''} />
         <Layers onClick={props.onCategoryChange} />
       </section>
       <section>
         <span onClick={props.onSync}>
           {props.lastSync}
         </span>
+        {/*
         <Save onClick={props.onSave} />
+        */}
         <Trash2 onClick={props.onDelete} />
       </section>
     </div>

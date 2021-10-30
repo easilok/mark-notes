@@ -1,6 +1,7 @@
 export interface NoteInformation {
-  filename: string; 
+  filename: string;
   title: string;
+  favorite: boolean;
 }
 
 export interface NoteInterface {

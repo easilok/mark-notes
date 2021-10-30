@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../hooks/store';
 
 import {
-  saveNote, setNoteContent, deleteNote
+  saveNote, setNoteContent, deleteNote, toggleFavorite
 } from '../store/slices/notesSlice';
 import { tooglePreviewNote } from '../store/slices/settingsSlice';
 import { sync } from '../store/slices/syncSlice';
@@ -16,19 +16,27 @@ import { SwalConfirm, SwalToast } from '../helpers/SweetAlert';
 import '../styles/editor.scss';
 
 function Editor() {
-  const noteText = useAppSelector(state => state.notes.currentNote.content);
+  // const noteText = useAppSelector(state => state.notes.currentNote.content);
   const editMode = useAppSelector(state => !state.settings.previewNote);
-  const { notes, categories } = useAppSelector(state => state.notes);
+  const {
+    notes, categories, currentNote, pendingSync, isFavorite
+  } = useAppSelector(state => state.notes);
   const lastSync = useAppSelector(state => state.sync.lastSync);
   const [splitPanel, setSplitPanel] = useState(false);
- 
+
   // dispatch function group
   const dispatch = useAppDispatch();
-  const _sync = () => dispatch(sync({notes, categories}));
+
+  const _sync = () => dispatch(sync({
+    notesData: { notes, categories },
+    currentNote,
+    pendingSync
+  }));
   const _saveNote = () => dispatch(saveNote());
-  const _deleteNote = () => dispatch(deleteNote());
+  const _deleteNote = () => dispatch(deleteNote(currentNote.filename));
   const _togglePreview = () => dispatch(tooglePreviewNote());
   const _setNoteContent = (value: string) => dispatch(setNoteContent(value));
+  const _toogleFavorite = () => dispatch(toggleFavorite());
 
   const deleteNoteHandler = () => {
     SwalConfirm({
@@ -48,12 +56,12 @@ function Editor() {
 
   let editorComponent = null;
   if (splitPanel || editMode) {
-    editorComponent = <NoteEditor noteContent={noteText}
+    editorComponent = <NoteEditor noteContent={currentNote.content}
       onChange={value => _setNoteContent(value)} />;
   }
   let viewerComponent = null;
   if (splitPanel || !editMode) {
-    viewerComponent = <NotePreview>{noteText}</NotePreview>;
+    viewerComponent = <NotePreview>{currentNote.content}</NotePreview>;
   }
 
   return (
@@ -65,13 +73,14 @@ function Editor() {
       <div className="editor-actions__container">
         <EditorActions
           editMode={editMode}
+          favorite={isFavorite}
           lastSync={lastSync}
           onEditModeChange={_togglePreview}
           onSplit={() => setSplitPanel(prevState => !prevState)}
           onSave={_saveNote}
           onDelete={deleteNoteHandler}
           onSync={_sync}
-          onFavorite={() => { }}
+          onFavorite={_toogleFavorite}
           onCategoryChange={() => { }}
         />
       </div>

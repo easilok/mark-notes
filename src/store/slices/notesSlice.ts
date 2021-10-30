@@ -1,42 +1,29 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../store';
-import { 
+import {
   NoteInterface, NoteInformation,
-  convertFilepath, convertTitle 
+  convertFilepath, convertTitle
 } from '../../models/Note';
 
 import {
-  ApplicationData
+  ApplicationData,
 } from '../../types';
-
-const NOTE_DATA_STORE_KEY = "noteData";
 
 export interface NoteState extends ApplicationData {
   currentNote: NoteInterface;
+  isFavorite: boolean;
+  pendingSync: NoteInterface[];
+  loading: boolean;
+  error: string;
+  scanning: boolean;
+  opening: boolean;
 }
 
-const removeNoteFromStorage = (state: NoteState) => {
-  if (state.currentNote.filename.length > 0) {
-    const filepath = convertFilepath(state.currentNote.filename);
-    localStorage.removeItem(filepath);
-  }
-  const newNoteList = state.notes.filter(
-    n => n.filename !== state.currentNote.filename
-  );
-  state.notes = newNoteList;
-  localStorage.setItem(NOTE_DATA_STORE_KEY, JSON.stringify({
-    categories: state.categories,
-    notes: state.notes
-  }));
-}
-
-const saveNoteToStorage = (state: NoteState) => {
+const pushNoteInformation = (state: NoteState) => {
   if (state.currentNote.filename.length === 0) {
     return;
   }
-  const filepath = convertFilepath(state.currentNote.filename);
   const noteTitle = convertTitle(state.currentNote.content);
-  localStorage.setItem(filepath, state.currentNote.content);
   const noteIndex = state.notes.findIndex(
     n => n.filename === state.currentNote.filename
   );
@@ -44,27 +31,48 @@ const saveNoteToStorage = (state: NoteState) => {
     state.notes.push({
       filename: state.currentNote.filename,
       title: noteTitle,
+      favorite: false,
     });
   } else {
     state.notes[noteIndex].title = noteTitle;
   }
-  // saveNotesListToStorage(state);
-};
+}
 
-const saveNotesListToStorage = (state: ApplicationData) => {
-  localStorage.setItem(NOTE_DATA_STORE_KEY, JSON.stringify({
-    categories: state.categories,
-    notes: state.notes
-  }));
-};
+const queueNoteSaving = ({ currentNote, pendingSync }: NoteState) => {
+  if (currentNote.filename.length === 0 &&
+    currentNote.content.length === 0) {
+    return;
+  }
+
+  if (currentNote.content.length === 0) {
+    return;
+  }
+
+  if (currentNote.filename.length === 0) {
+    currentNote.filename = new Date().toISOString();
+  }
+  const noteIndex = pendingSync.findIndex(n => n.filename === currentNote.filename);
+  if (noteIndex < 0) {
+    pendingSync.push({ ...currentNote });
+  } else {
+    pendingSync[noteIndex].content = currentNote.content;
+  }
+}
 
 const initialState: NoteState = {
   notes: [],
   categories: [],
+  favorites: [],
   currentNote: {
     filename: '',
     content: ''
   },
+  isFavorite: false,
+  pendingSync: [],
+  loading: false,
+  error: '',
+  scanning: false,
+  opening: false,
 }
 
 export const notesSlice = createSlice({
@@ -72,99 +80,120 @@ export const notesSlice = createSlice({
   initialState,
   reducers: {
     loadNotes: (state) => {
-      // getting stored value
-      const noteData = localStorage.getItem(NOTE_DATA_STORE_KEY);
-      if (!noteData) {
-        return;
-      }
-      const parsedNoteData = JSON.parse(noteData);
-      if (parsedNoteData) {
-        state.notes = parsedNoteData.notes;
-        state.categories = parsedNoteData.categories;
+      state.loading = true;
+    },
+    finishLoadNotes: (state, { payload }: PayloadAction<ApplicationData | null>) => {
+      state.loading = false;
+      if (payload) {
+        state.notes = payload.notes;
+        state.categories = payload.categories;
+        state.favorites = payload.favorites;
       } else {
         state.notes = [];
         state.categories = [];
+        state.favorites = [];
       }
-      console.log("store notes", state.notes);
     },
-    scanNotes: (state) => {
-      const storageKeys = Object.keys(localStorage);
-      const storageMissingDocs: NoteInformation[] = [];
-      storageKeys.forEach(key => {
-        if (key.endsWith('.md')) {
-          const noteIndex = state.notes.findIndex(
-            n => convertFilepath(n.filename) === key
-          );
-          if (noteIndex < 0) {
-            storageMissingDocs.push({
-              filename: key,
-              title: ''
-            });
-          }
-        }
-      });
-      state.notes = [
-        ...state.notes,
-        ...storageMissingDocs
-      ];
-      saveNotesListToStorage(state);
+    errorLoadNotes: (state, { payload }: PayloadAction<string>) => {
+      state.error = payload;
+      console.log("Load Notes error", state.error);
+    },
+    scanNotes: (state, _action: PayloadAction<NoteInformation[]>) => {
+      state.scanning = true;
+    },
+    finishScanNotes: (state, { payload }: PayloadAction<NoteInformation[]>) => {
+      state.scanning = false;
+      if (payload) {
+        state.notes = [...state.notes, ...payload];
+      }
     },
     openNote: (state, action: PayloadAction<string>) => {
       // getting stored value
+      queueNoteSaving(state);
       state.currentNote.filename = action.payload;
-      const selectedNote = localStorage.getItem(
-        convertFilepath(state.currentNote.filename)
+      state.currentNote.content = '';
+      state.opening = true;
+      state.isFavorite = false;
+    },
+    finishOpenNote: (state, action: PayloadAction<string>) => {
+      state.currentNote.content = action.payload;
+      state.opening = false;
+      const noteInfo = state.notes.find(n =>
+        n.filename === state.currentNote.filename
       );
-      state.currentNote.content = selectedNote || '';
+      if (noteInfo) {
+        state.isFavorite = noteInfo.favorite;
+      }
     },
     saveNote: (state) => {
       console.log("Save note", state);
-      saveNoteToStorage(state);
     },
     setFilename: (state, action: PayloadAction<string>) => {
-      removeNoteFromStorage(state);
       state.currentNote.filename = action.payload;
-      saveNoteToStorage(state);
     },
     setNoteContent: (state, action) => {
-      console.log("Set note content", action);
       state.currentNote.content = action.payload;
-      saveNoteToStorage(state);
+      pushNoteInformation(state);
     },
     newNote: (state) => {
-      saveNoteToStorage(state);
+      queueNoteSaving(state);
       state.currentNote = {
         filename: new Date().toISOString(),
         content: ''
       };
+      state.isFavorite = false;
     },
-    deleteNote: (state) => {
-      removeNoteFromStorage(state);
+    deleteNote: (state, _action: PayloadAction<string>) => {
       state.currentNote = {
         filename: '',
         content: ''
       };
+      state.isFavorite = false;
     },
-    finishLoadNotes: (state, { payload }: PayloadAction<ApplicationData | null>) => {
-      if (!payload) {
-        state.notes = [];
-        state.categories = [];
-      } else {
-        state.notes = payload.notes;
-        state.categories = payload.categories;
+    finishDeleteNote: (state, { payload }: PayloadAction<string>) => {
+      state.notes = state.notes.filter(n =>
+        convertFilepath(n.filename) !== convertFilepath(payload)
+      );
+      state.favorites = state.favorites.filter(n =>
+        convertFilepath(n.filename) !== convertFilepath(payload)
+      );
+    },
+    clearQueue: (state) => {
+      state.pendingSync = [];
+    },
+    toggleFavorite: (state) => {
+      const currentNoteIndex = state.notes.findIndex(n =>
+        n.filename === state.currentNote.filename
+      );
+      if (currentNoteIndex >= 0) {
+        const isFavorite = !state.notes[currentNoteIndex].favorite;
+        state.isFavorite = isFavorite;
+        state.notes[currentNoteIndex].favorite = isFavorite;
+        if (isFavorite) {
+          state.favorites.push({
+            ...state.notes[currentNoteIndex]
+          });
+        } else {
+          state.favorites = state.favorites.filter(n =>
+            n.filename !== state.notes[currentNoteIndex].filename
+          );
+        }
       }
     },
-
   },
 })
 
 // Action creators are generated for each case reducer function
 export const {
-  loadNotes, openNote, saveNote, setFilename,
-  setNoteContent, newNote, deleteNote, scanNotes,
-  finishLoadNotes
+  loadNotes, finishLoadNotes, errorLoadNotes,
+  openNote, finishOpenNote, saveNote, setFilename,
+  setNoteContent, newNote, clearQueue,
+  deleteNote, finishDeleteNote,
+  scanNotes, finishScanNotes, toggleFavorite
 } = notesSlice.actions;
 
 export const selectNotes = (state: RootState) => state.notes.notes;
+export const selectFavorites = (state: RootState) => state.notes.favorites;
+export const selectPendingSync = (state: RootState) => state.notes.pendingSync;
 
 export default notesSlice.reducer

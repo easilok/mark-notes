@@ -1,12 +1,49 @@
 import { sync } from '../store/slices/syncSlice';
-import { NoteInformation } from '../models/Note';
+import {
+  scanNotes, deleteNote, openNote
+} from '../store/slices/notesSlice';
+import { NoteInformation, NoteInterface } from '../models/Note';
 
-export interface ApplicationData {
+export interface NotesLocalData {
   notes: NoteInformation[];
   categories: string[];
 }
 
+export interface ApplicationData extends NotesLocalData {
+  favorites: NoteInformation[];
+}
+
+export interface SyncPayload {
+  notesData: NotesLocalData;
+  currentNote: NoteInterface;
+  pendingSync: NoteInterface[];
+}
+
 export interface SyncAction {
   type: typeof sync.type;
-  payload: ApplicationData;
+  payload: SyncPayload;
+}
+
+export interface ScanAction {
+  type: typeof scanNotes.type;
+  payload: NoteInformation[];
+}
+
+export interface OpenNoteAction {
+  type: typeof openNote.type;
+  payload: string;
+}
+
+export interface DeleteNoteAction {
+  type: typeof deleteNote.type;
+  payload: string;
+}
+
+export enum MENU_SELECTION {
+  NONE = 'NONE',
+  NOTES = 'NOTES',
+  FAVORITES = 'FAVORITES',
+  CATEGORY = 'CATEGORY',
+  SCRATCHPAD = 'SCRATCHPAD',
+  TRASH = 'TRASH',
 }

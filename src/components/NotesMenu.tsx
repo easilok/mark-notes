@@ -16,6 +16,7 @@ interface NotesMenuProps {
 const NotesMenu: React.FC<NotesMenuProps> = (props) => {
   const { notesList, isVisible } = props;
 
+  const _notesList = notesList || [];
 
   if (!isVisible) {
     return null;
@@ -25,7 +26,7 @@ const NotesMenu: React.FC<NotesMenuProps> = (props) => {
     <SidePanel onPanelClose={props.onPanelClose} canClose
       bodyClassName="scroll-y">
       <section className="note-section">
-        {notesList.map((n, i) => (
+        {_notesList.map((n, i) => (
           <NoteItem key={i}
             onItemClick={props.onNoteSelected.bind(this, n.filename)}
             title={n.title}

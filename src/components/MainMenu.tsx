@@ -2,12 +2,14 @@ import React, { useState, useCallback } from 'react';
 import {
   Book, PlusCircle, Bookmark, UploadCloud
 } from 'react-feather';
-// import { useSelector, useDispatch } from 'react-redux';
 import { useAppSelector, useAppDispatch } from '../hooks/store';
 import {
-  loadNotes, newNote, openNote, scanNotes
+  newNote, openNote, scanNotes
 } from '../store/slices/notesSlice';
-import { setPreviewNote, toogleMenuCollapsed } from '../store/slices/settingsSlice';
+import {
+  setPreviewNote, toogleMenuCollapsed, setCurrentMenu
+} from '../store/slices/settingsSlice';
+import { MENU_SELECTION } from '../types';
 
 import SidePanel from '../containers/SidePanel';
 import NotesMenu from './NotesMenu';
@@ -17,12 +19,17 @@ import { SwalConfirm, SwalToast } from '../helpers/SweetAlert';
 function MainMenu() {
   const [showNotesList, setShowNotesList] = useState(false);
   const minimizeMenu = useAppSelector(state => state.settings.general.menuCollapsed);
-  const notesList = useAppSelector(state => state.notes.notes);
+  const currentMenu = useAppSelector(state => state.settings.currentMenu);
+  const { notes, favorites } = useAppSelector(state => state.notes);
+  // Dispatch group
   const dispatch = useAppDispatch();
+  const _scan = useCallback(() => {
+    // dispatch(loadNotes());
+    dispatch(scanNotes(notes));
+  }, [dispatch, notes]);
 
   const notesClickHandler = useCallback(() => {
-    console.log("dispatching load notes");
-    dispatch(loadNotes());
+    dispatch(setCurrentMenu(MENU_SELECTION.NOTES));
     setShowNotesList(true);
   }, [dispatch, setShowNotesList]);
 
@@ -31,8 +38,10 @@ function MainMenu() {
     dispatch(newNote());
   }, [dispatch]);
 
-  const bookmarksClickHandler = () => {
-  };
+  const bookmarksClickHandler = useCallback(() => {
+    dispatch(setCurrentMenu(MENU_SELECTION.FAVORITES));
+    setShowNotesList(true);
+  }, [dispatch]);
 
   const onScanFilesHandler = useCallback(() => {
     // Maybe show full sidebar
@@ -43,14 +52,19 @@ function MainMenu() {
     })
       .then(result => {
         if (result.isConfirmed) {
-          dispatch(loadNotes());
-          dispatch(scanNotes());
+          _scan();
           SwalToast({
             title: 'Scanned lost notes.',
           });
         }
       })
-  }, [dispatch]);
+  }, [_scan]);
+
+  let notesList = notes;
+
+  if (currentMenu === MENU_SELECTION.FAVORITES) {
+    notesList = favorites;
+  }
 
   return (
     <React.Fragment>
@@ -60,16 +74,19 @@ function MainMenu() {
         <section>
           <MenuItem onMenuClick={newNoteHandler}
             iconify={minimizeMenu}
+            active={false}
             title="New Note" icon={
               <PlusCircle />
             } />
           <MenuItem onMenuClick={notesClickHandler}
             iconify={minimizeMenu}
+            active={currentMenu === MENU_SELECTION.NOTES}
             title="Notes" icon={
               <Book />
             } />
           <MenuItem onMenuClick={bookmarksClickHandler}
             iconify={minimizeMenu}
+            active={currentMenu === MENU_SELECTION.FAVORITES}
             title="Bookmarks" icon={
               <Bookmark />
             } />
@@ -77,6 +94,7 @@ function MainMenu() {
         <section>
           <MenuItem onMenuClick={onScanFilesHandler}
             iconify={minimizeMenu}
+            active={false}
             title="Notes" icon={
               <UploadCloud />
             } />

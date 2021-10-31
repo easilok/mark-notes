@@ -1,7 +1,7 @@
 @import './_variables.scss';
 .note-item {
   border-bottom: $app-palette-medium 1px solid;
-  padding: .75rem;
+  padding: 0.75rem;
   display: flex;
   justify-content: space-between;
   cursor: pointer;
@@ -17,13 +17,13 @@
 .menu-item {
   display: flex;
   cursor: pointer;
-  padding: .75rem;
+  padding: 0.75rem;
   align-items: center;
 }
 
 .menu-item:hover,
 .menu-item:active,
-.menu-item.active{
+.menu-item.active {
   color: $app-palette-primary;
 }
 
@@ -33,11 +33,11 @@
 
 .menu-item > * {
   font-size: 0.95rem;
-  margin: 0 .6rem 0 0;
+  margin: 0 0.6rem 0 0;
 }
 
 .note-item__info h4 {
-  margin: 0 0 .5rem 0;
+  margin: 0 0 0.5rem 0;
   font-size: 0.95rem;
   /* line-height: 1.75rem; */
 }

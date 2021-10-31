@@ -1,49 +1,46 @@
-import {
-  Edit, Eye, Columns, Bookmark, Layers,
-  Trash2
-} from 'react-feather';
+import { Edit, Eye, Columns, Bookmark, Layers, Trash2 } from 'react-feather'
 
 interface EditorActionsProps {
-  editMode: boolean;
-  favorite?: boolean;
-  lastSync: string;
-  onSplit: () => void;
-  onFavorite: () => void;
-  onCategoryChange: () => void;
-  onEditModeChange: () => void;
-  onSave: () => void;
-  onDelete: () => void;
-  onSync: () => void;
-};
+  editMode: boolean
+  favorite?: boolean
+  lastSync: string
+  onSplit: () => void
+  onFavorite: () => void
+  onCategoryChange: () => void
+  onEditModeChange: () => void
+  onSave: () => void
+  onDelete: () => void
+  onSync: () => void
+}
 
 export default function EditorActions(props: EditorActionsProps) {
-  const { editMode } = props;
-  const favorite = props.favorite || false;
+  const { editMode } = props
+  const favorite = props.favorite || false
 
   const EditModeIcon = editMode ? (
     <Eye onClick={props.onEditModeChange} />
   ) : (
     <Edit onClick={props.onEditModeChange} />
-  );
+  )
 
   return (
     <div className="editor-actions">
       <section>
         {EditModeIcon}
         <Columns onClick={props.onSplit} />
-        <Bookmark onClick={props.onFavorite}
-          className={favorite ? 'active' : ''} />
+        <Bookmark
+          onClick={props.onFavorite}
+          className={favorite ? 'active' : ''}
+        />
         <Layers onClick={props.onCategoryChange} />
       </section>
       <section>
-        <span onClick={props.onSync}>
-          {props.lastSync}
-        </span>
+        <span onClick={props.onSync}>{props.lastSync}</span>
         {/*
         <Save onClick={props.onSave} />
         */}
         <Trash2 onClick={props.onDelete} />
       </section>
     </div>
-  );
-};
+  )
+}

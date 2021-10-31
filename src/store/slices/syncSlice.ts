@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { SyncPayload } from '../../types';
+import { SyncPayload } from '../../types'
 
 interface SyncState {
-  syncing: boolean;
-  lastSync: string;
-};
+  syncing: boolean
+  lastSync: string
+}
 
 const initialState: SyncState = {
   syncing: false,
@@ -17,18 +17,19 @@ export const syncSlice = createSlice({
   initialState,
   reducers: {
     sync: (state, { payload }: PayloadAction<SyncPayload>) => {
-      state.syncing = true;
+      state.syncing = true
     },
     finishSync: (state) => {
-      state.syncing = false;
-      state.lastSync = new Date().toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' });
-      console.log("Sync: ", state.lastSync);
-    }
-  }
-});
+      state.syncing = false
+      state.lastSync = new Date().toLocaleString('en-GB', {
+        dateStyle: 'short',
+        timeStyle: 'short',
+      })
+      console.log('Sync: ', state.lastSync)
+    },
+  },
+})
 
-export const {
-  sync, finishSync
-} = syncSlice.actions;
+export const { sync, finishSync } = syncSlice.actions
 
-export default syncSlice.reducer;
+export default syncSlice.reducer

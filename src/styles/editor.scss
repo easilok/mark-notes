@@ -13,7 +13,7 @@
   width: 100%;
   flex: 1;
   background-color: $app-codemirror-default-bg;
-  border: rgba(0,0,0, 0.3) 1px solid;
+  border: rgba(0, 0, 0, 0.3) 1px solid;
   box-shadow: 5px 10px 10px rgba(0, 0, 0, 0.6);
 }
 
@@ -60,7 +60,7 @@
 }
 
 .editor-actions > section > * {
-  margin-right: .75rem;
+  margin-right: 0.75rem;
   height: 100%;
   cursor: pointer;
   width: 34px;
@@ -70,13 +70,13 @@
 .editor-actions > section > span {
   width: auto;
   height: auto;
-  font-size: .70rem;
+  font-size: 0.7rem;
   font-style: italic;
   color: #6a6a6a;
 }
 
 .editor-actions > section > *:last-child {
-    margin-right: 0;
+  margin-right: 0;
 }
 
 .editor-actions > section > *:hover,

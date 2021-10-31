@@ -13,7 +13,7 @@
 .side-panel__header {
   display: flex;
   justify-content: flex-end;
-  padding: .75rem;
+  padding: 0.75rem;
 }
 
 .side-panel__body {
@@ -55,7 +55,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%
+  width: 100%;
 }
 
 .empty-page__content {
@@ -83,7 +83,7 @@
       margin: 0 8px 0 0;
     }
     &:hover,
-    &:active, {
+    &:active {
       background-color: $app-palette-darkest;
       border: $app-palette-primary 3px solid;
       // color: $app-palette-primary;

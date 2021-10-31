@@ -1,42 +1,40 @@
-import { sync } from '../store/slices/syncSlice';
-import {
-  scanNotes, deleteNote, openNote
-} from '../store/slices/notesSlice';
-import { NoteInformation, NoteInterface } from '../models/Note';
+import { sync } from '../store/slices/syncSlice'
+import { scanNotes, deleteNote, openNote } from '../store/slices/notesSlice'
+import { NoteInformation, NoteInterface } from '../models/Note'
 
 export interface NotesLocalData {
-  notes: NoteInformation[];
-  categories: string[];
+  notes: NoteInformation[]
+  categories: string[]
 }
 
 export interface ApplicationData extends NotesLocalData {
-  favorites: NoteInformation[];
+  favorites: NoteInformation[]
 }
 
 export interface SyncPayload {
-  notesData: NotesLocalData;
-  currentNote: NoteInterface;
-  pendingSync: NoteInterface[];
+  notesData: NotesLocalData
+  currentNote: NoteInterface
+  pendingSync: NoteInterface[]
 }
 
 export interface SyncAction {
-  type: typeof sync.type;
-  payload: SyncPayload;
+  type: typeof sync.type
+  payload: SyncPayload
 }
 
 export interface ScanAction {
-  type: typeof scanNotes.type;
-  payload: NoteInformation[];
+  type: typeof scanNotes.type
+  payload: NoteInformation[]
 }
 
 export interface OpenNoteAction {
-  type: typeof openNote.type;
-  payload: string;
+  type: typeof openNote.type
+  payload: string
 }
 
 export interface DeleteNoteAction {
-  type: typeof deleteNote.type;
-  payload: string;
+  type: typeof deleteNote.type
+  payload: string
 }
 
 export enum MENU_SELECTION {

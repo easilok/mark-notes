@@ -23,13 +23,15 @@ $error: #f2777a;
 $box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.1), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
 
 // Font
-$sans-serif: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
-  'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+$sans-serif: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 
 $monospace: Menlo, Monaco, Consolas, 'Courier New', monospace;
 
 // Elements
-$buttons: ('.button, a.button, button, [type=submit], [type=reset], [type=button]');
+$buttons: (
+  '.button, a.button, button, [type=submit], [type=reset], [type=button]'
+);
 $forms: (
   '[type=color], [type=date], [type=datetime], [type=datetime-local], [type=email], [type=month], [type=number], [type=password], [type=search], [type=tel], [type=text], [type=url], [type=week], [type=time], select, textarea'
 );
@@ -53,7 +55,5 @@ $error: #f2777a;
 
 // for dark
 
-  
 $dark-sidebar: #333;
 $dark-editor: #3f3f3f;
-

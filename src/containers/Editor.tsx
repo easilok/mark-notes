@@ -43,7 +43,8 @@ const Editor: React.FC = () => {
   const _togglePreview = () => dispatch(tooglePreviewNote());
   const _setNoteContent = (value: string) => dispatch(setNoteContent(value));
   const _toogleFavorite = () => dispatch(toggleFavorite());
-  const _downloadNote = () => downloadNote(currentNote.filename, currentNote.content);
+  const _downloadNote = () =>
+    downloadNote(currentNote.filename, currentNote.content);
 
   const deleteNoteHandler = () => {
     SwalConfirm({
@@ -92,11 +93,11 @@ const Editor: React.FC = () => {
           onSync={_sync}
           onFavorite={_toogleFavorite}
           onDownload={_downloadNote}
-          onCategoryChange={() => { }} // eslint-disable-line @typescript-eslint/no-empty-function
+          onCategoryChange={() => {}} // eslint-disable-line @typescript-eslint/no-empty-function
         />
       </div>
     </div>
   );
-}
+};
 
 export default Editor;

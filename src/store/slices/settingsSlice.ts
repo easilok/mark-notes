@@ -66,6 +66,7 @@ export const {
   setCurrentMenu,
 } = settingsSlice.actions;
 
-export const generalSettings = (state: RootState): ApplicationSettings => state.settings.general;
+export const generalSettings = (state: RootState): ApplicationSettings =>
+  state.settings.general;
 
 export default settingsSlice.reducer;

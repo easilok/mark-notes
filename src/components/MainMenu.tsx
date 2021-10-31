@@ -1,7 +1,19 @@
 import React, { useState, useCallback, useRef } from 'react';
-import { Book, PlusCircle, Bookmark, UploadCloud } from 'react-feather';
+import {
+  Book,
+  PlusCircle,
+  Bookmark,
+  Upload,
+  Database,
+  Tool,
+} from 'react-feather';
 import { useAppSelector, useAppDispatch } from '../hooks/store';
-import { newNote, openNote, scanNotes, importNote } from '../store/slices/notesSlice';
+import {
+  newNote,
+  openNote,
+  scanNotes,
+  importNote,
+} from '../store/slices/notesSlice';
 import {
   setPreviewNote,
   toogleMenuCollapsed,
@@ -18,6 +30,7 @@ import { importNote as browserImportNote } from '../helpers/browserFileHandling'
 
 const MainMenu: React.FC = () => {
   const [showNotesList, setShowNotesList] = useState(false);
+  const [showTools, setShowTools] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
   const minimizeMenu = useAppSelector(
     (state) => state.settings.general.menuCollapsed
@@ -30,7 +43,8 @@ const MainMenu: React.FC = () => {
     // dispatch(loadNotes());
     dispatch(scanNotes(notes));
   }, [dispatch, notes]);
-  const _importNote = (filename: string, content: string) => dispatch(importNote({ filename, content }));
+  const _importNote = (filename: string, content: string) =>
+    dispatch(importNote({ filename, content }));
 
   const notesClickHandler = useCallback(() => {
     dispatch(setCurrentMenu(MENU_SELECTION.NOTES));
@@ -121,23 +135,39 @@ const MainMenu: React.FC = () => {
           />
         </section>
         <section>
+          {showTools && (
+            <MenuItem
+              onMenuClick={onImportHandler}
+              iconify={minimizeMenu}
+              active={false}
+              title="Import"
+              icon={<Upload />}
+            />
+          )}
+          {showTools && (
+            <MenuItem
+              onMenuClick={onScanFilesHandler}
+              iconify={minimizeMenu}
+              active={false}
+              title="Scan"
+              icon={<Database />}
+            />
+          )}
           <MenuItem
-            onMenuClick={onImportHandler}
+            onMenuClick={() => setShowTools(!showTools)}
             iconify={minimizeMenu}
-            active={false}
-            title="Import"
-            icon={<UploadCloud />}
+            active={showTools}
+            title="Tools"
+            icon={<Tool />}
           />
-          <MenuItem
-            onMenuClick={onScanFilesHandler}
-            iconify={minimizeMenu}
-            active={false}
-            title="Scan"
-            icon={<UploadCloud />}
+          <input
+            type="file"
+            id="file-input"
+            ref={fileInput}
+            accept="text/plain"
+            style={{ display: 'none' }}
+            onChange={onFileImportHandler}
           />
-          <input type="file" id="file-input" ref={fileInput}
-            accept="text/plain" style={{ display: "none" }}
-            onChange={onFileImportHandler} />
         </section>
       </SidePanel>
       <NotesMenu
@@ -152,6 +182,6 @@ const MainMenu: React.FC = () => {
       />
     </React.Fragment>
   );
-}
+};
 
 export default MainMenu;

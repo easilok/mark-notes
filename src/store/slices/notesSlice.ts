@@ -43,16 +43,17 @@ const pushNoteInformation = (state: NoteState) => {
   }
 };
 
-const queueNoteSaving = ({ note, pendingSync}: QueuePayload): NoteInterface[] => {
+const queueNoteSaving = ({
+  note,
+  pendingSync,
+}: QueuePayload): NoteInterface[] => {
   const newPendingSync = [...pendingSync];
   // Should be queueing only the notes that changed
   if (note.filename.length === 0 && note.content.length === 0) {
-
     return newPendingSync;
   }
 
   if (note.content.length === 0) {
-
     return newPendingSync;
   }
 
@@ -203,27 +204,32 @@ export const notesSlice = createSlice({
         }
       }
     },
-    importNote: (state, {payload}: PayloadAction<{filename: string, content: string}>) => {
+    importNote: (
+      state,
+      { payload }: PayloadAction<{ filename: string; content: string }>
+    ) => {
       if (payload.filename.length === 0 || payload.content.length === 0) {
         return;
       }
       const note: NoteInterface = {
         filename: payload.filename,
-        content: payload.content
+        content: payload.content,
       };
-      const noteIndex = state.notes.findIndex(n => n.filename === note.filename);
+      const noteIndex = state.notes.findIndex(
+        (n) => n.filename === note.filename
+      );
       if (noteIndex < 0) {
         state.notes.push({
           filename: note.filename,
           title: convertTitle(note.content),
-          favorite: false
+          favorite: false,
         });
       }
       state.pendingSync = queueNoteSaving({
-        note, 
-        pendingSync: state.pendingSync
-    });
-    }
+        note,
+        pendingSync: state.pendingSync,
+      });
+    },
   },
 });
 
@@ -247,8 +253,11 @@ export const {
   importNote,
 } = notesSlice.actions;
 
-export const selectNotes = (state: RootState): NoteInformation[] => state.notes.notes;
-export const selectFavorites = (state: RootState): NoteInformation[] => state.notes.favorites;
-export const selectPendingSync = (state: RootState): NoteInterface[] => state.notes.pendingSync;
+export const selectNotes = (state: RootState): NoteInformation[] =>
+  state.notes.notes;
+export const selectFavorites = (state: RootState): NoteInformation[] =>
+  state.notes.favorites;
+export const selectPendingSync = (state: RootState): NoteInterface[] =>
+  state.notes.pendingSync;
 
 export default notesSlice.reducer;

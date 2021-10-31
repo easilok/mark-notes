@@ -1,6 +1,9 @@
 export const downloadNote = (filename: string, text: string): void => {
   const element = document.createElement('a');
-  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute(
+    'href',
+    'data:text/plain;charset=utf-8,' + encodeURIComponent(text)
+  );
   element.setAttribute('download', filename);
 
   element.style.display = 'none';
@@ -9,11 +12,14 @@ export const downloadNote = (filename: string, text: string): void => {
   element.click();
 
   document.body.removeChild(element);
-}
+};
 
-export const importNote = (all_files: FileList, callback: (filename: string, e: ProgressEvent<FileReader>) => void): void => {
+export const importNote = (
+  all_files: FileList,
+  callback: (filename: string, e: ProgressEvent<FileReader>) => void
+): void => {
   // files that user has chosen
-  if(all_files.length == 0) {
+  if (all_files.length == 0) {
     return;
   }
 
@@ -22,14 +28,14 @@ export const importNote = (all_files: FileList, callback: (filename: string, e: 
     const file = all_files[i];
 
     // files types allowed
-    const allowed_types = [ 'text/plain' ];
-    if(allowed_types.indexOf(file.type) == -1) {
+    const allowed_types = ['text/plain'];
+    if (allowed_types.indexOf(file.type) == -1) {
       return;
     }
 
     // Max 2 MB allowed
-    const max_size_allowed = 2*1024*1024
-    if(file.size > max_size_allowed) {
+    const max_size_allowed = 2 * 1024 * 1024;
+    if (file.size > max_size_allowed) {
       return;
     }
 
@@ -42,6 +48,5 @@ export const importNote = (all_files: FileList, callback: (filename: string, e: 
 
     // read as text file
     reader.readAsText(file);
-
   }
-}
+};

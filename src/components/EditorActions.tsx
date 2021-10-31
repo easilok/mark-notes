@@ -1,5 +1,13 @@
 import React from 'react';
-import { Edit, Eye, Columns, Bookmark, Layers, Trash2, Download } from 'react-feather';
+import {
+  Edit,
+  Eye,
+  Columns,
+  Bookmark,
+  Layers,
+  Trash2,
+  Download,
+} from 'react-feather';
 
 interface EditorActionsProps {
   editMode: boolean;
@@ -46,6 +54,6 @@ const EditorActions: React.FC<EditorActionsProps> = (props) => {
       </section>
     </div>
   );
-}
+};
 
 export default EditorActions;

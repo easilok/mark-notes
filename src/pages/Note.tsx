@@ -6,6 +6,6 @@ const Note: React.FC = () => {
       <Editor />
     </div>
   );
-}
+};
 
 export default Note;

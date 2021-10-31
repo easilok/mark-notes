@@ -1,22 +1,22 @@
 # Introduction
 
 This is a(nother) note taking app, for those who wishes to take their notes in
-markdown. 
+markdown.
 
 # Features
 
 - Notes written in markdown through an IDE-like editor provided by [CodeMirror](https://codemirror.net/)
 - Preview markdown as full screen or split screen as you type
-- Syntax highlight on IDE-like editor and on preview (using Tania Rascia's 
+- Syntax highlight on IDE-like editor and on preview (using Tania Rascia's
   [New Moon Theme](https://taniarascia.github.io/new-moon/) for now)
 - Multi-cursor editing (feature from [CodeMirror](https://codemirror.net/))
 - No database because the notes are stored in your browser
 
-# About 
+# About
 
-This app is heavily inspired in the [Tania Rascia's Takenote](https://github.com/taniarascia/takenote) 
+This app is heavily inspired in the [Tania Rascia's Takenote](https://github.com/taniarascia/takenote)
 that I found when searching for good self-hosted note taking apps. In the
-future developments it will also have some minor inspirations on the 
+future developments it will also have some minor inspirations on the
 [QingWei-Li's Notea](https://github.com/QingWei-Li/notea).
 
 I found that Takenote is a well feature app, but its missing a way to interact
@@ -39,18 +39,18 @@ add the next features in the near future
 
 # Database mode (Future feature)
 
-This is a mode that I found lacking in some of the applications I tried. 
+This is a mode that I found lacking in some of the applications I tried.
 [Takenote](https://github.com/taniarascia/takenote) has a feature kind of like
 this, but is locked to using github as storage. [Notea](https://github.com/QingWei-Li/notea)
 has a feature like this, because is embedded in a server, and uses one of
 several storage services to provide that feature.
 
 What I want is an abstraction, meaning, this application is a client, that will
-be able to work in local storage mode, or cloud. For the last one, there will be 
+be able to work in local storage mode, or cloud. For the last one, there will be
 well defined API endpoints that the application searches, the user only needs
 to point for the server address that provides data on those endpoints.
 
-I will also make a server application that will implement those API endpoints and 
+I will also make a server application that will implement those API endpoints and
 anyone will be able to install and make the pair the two parts.
 
 # Use this application
@@ -58,7 +58,7 @@ anyone will be able to install and make the pair the two parts.
 There is a [demo version](http://easilok-notes.netlify.com) of the application
 online for anyone to try (local browser storage).
 
-To host this application, it's very simple, as it is a simple react app. 
+To host this application, it's very simple, as it is a simple react app.
 Just clone the repo, install the dependencies with
 
 ```bash

@@ -11,7 +11,9 @@ import {
   getDataFromStorage,
 } from '../storage/local';
 
-export const syncNoteData = (payload: SyncPayload): Promise<NotesLocalData | null> =>
+export const syncNoteData = (
+  payload: SyncPayload
+): Promise<NotesLocalData | null> =>
   new Promise<NotesLocalData | null>((resolve) => {
     saveDataToStorage<NotesLocalData>(
       STORAGE_DATA_TYPE.APPLICATION_NOTES,
@@ -27,7 +29,10 @@ export const syncNoteData = (payload: SyncPayload): Promise<NotesLocalData | nul
     //     payload.currentNote
     //   );
     // }
-    console.log('Saving pending notes: ', payload.pendingSync)
+    if (process.env.NODE_ENV === 'development') {
+      // eslint-disable-next-line no-console
+      console.log('Saving pending notes: ', payload.pendingSync);
+    }
     payload.pendingSync.forEach((n) => {
       saveDataToStorage<NoteInterface>(STORAGE_DATA_TYPE.NOTE, n);
     });
@@ -65,7 +70,9 @@ export const loadNoteInformation = (): Promise<ApplicationData> =>
     resolve(fetchedData);
   });
 
-export const scanMissingNotes = (payload: NoteInformation[]): Promise<NoteInformation[]> =>
+export const scanMissingNotes = (
+  payload: NoteInformation[]
+): Promise<NoteInformation[]> =>
   new Promise<NoteInformation[]>((resolve) => {
     const storageKeys = Object.keys(localStorage);
     const storageMissingDocs: NoteInformation[] = [];

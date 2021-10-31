@@ -6,7 +6,6 @@ import {
   Bookmark,
   Layers,
   Trash2,
-  Download,
 } from 'react-feather';
 
 interface EditorActionsProps {
@@ -20,7 +19,6 @@ interface EditorActionsProps {
   onSave: () => void;
   onDelete: () => void;
   onSync: () => void;
-  onDownload: () => void;
 }
 
 const EditorActions: React.FC<EditorActionsProps> = (props) => {
@@ -43,7 +41,6 @@ const EditorActions: React.FC<EditorActionsProps> = (props) => {
           className={favorite ? 'active' : ''}
         />
         <Layers onClick={props.onCategoryChange} />
-        <Download onClick={props.onDownload} />
       </section>
       <section>
         <span onClick={props.onSync}>{props.lastSync}</span>

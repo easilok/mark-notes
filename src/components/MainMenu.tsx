@@ -6,6 +6,7 @@ import {
   Upload,
   Database,
   Tool,
+  Download,
 } from 'react-feather';
 import { useAppSelector, useAppDispatch } from '../hooks/store';
 import {
@@ -26,7 +27,10 @@ import NotesMenu from './NotesMenu';
 import MenuItem from './MenuItem';
 import { SwalConfirm, SwalToast } from '../helpers/SweetAlert';
 
-import { importNote as browserImportNote } from '../helpers/browserFileHandling';
+import {
+  downloadNote,
+  importNote as browserImportNote
+} from '../helpers/browserFileHandling';
 
 const MainMenu: React.FC = () => {
   const [showNotesList, setShowNotesList] = useState(false);
@@ -36,7 +40,8 @@ const MainMenu: React.FC = () => {
     (state) => state.settings.general.menuCollapsed
   );
   const currentMenu = useAppSelector((state) => state.settings.currentMenu);
-  const { notes, favorites } = useAppSelector((state) => state.notes);
+  const { notes, favorites, currentNote } = useAppSelector((state) => state.notes);
+  const hasNoteLoaded = currentNote.filename.length > 0;
   // Dispatch group
   const dispatch = useAppDispatch();
   const _scan = useCallback(() => {
@@ -45,6 +50,8 @@ const MainMenu: React.FC = () => {
   }, [dispatch, notes]);
   const _importNote = (filename: string, content: string) =>
     dispatch(importNote({ filename, content }));
+  const _downloadNote = () =>
+    downloadNote(currentNote.filename, currentNote.content);
 
   const notesClickHandler = useCallback(() => {
     dispatch(setCurrentMenu(MENU_SELECTION.NOTES));
@@ -135,6 +142,15 @@ const MainMenu: React.FC = () => {
           />
         </section>
         <section>
+          {showTools && hasNoteLoaded && (
+            <MenuItem
+              onMenuClick={_downloadNote}
+              iconify={minimizeMenu}
+              active={false}
+              title="Export"
+              icon={<Download />}
+            />
+          )}
           {showTools && (
             <MenuItem
               onMenuClick={onImportHandler}

@@ -11,8 +11,10 @@ export function useInterval(callback: () => void, delay: number | null): void {
 
   // Set up the interval
   useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log('Set Interval');
+    if (process.env.NODE_ENV === 'development') {
+      // eslint-disable-next-line no-console
+      console.log('Set Interval');
+    }
     const tick = () => {
       return savedCallback.current();
     };

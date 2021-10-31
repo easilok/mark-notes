@@ -1,70 +1,82 @@
-# Getting Started with Create React App
+# Introduction
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a(nother) note taking app, for those who wishes to take their notes in
+markdown. 
 
-## Available Scripts
+# Features
 
-In the project directory, you can run:
+- Notes written in markdown through an IDE-like editor provided by [CodeMirror](https://codemirror.net/)
+- Preview markdown as full screen or split screen as you type
+- Syntax highlight on IDE-like editor and on preview (using Tania Rascia's 
+  [New Moon Theme](https://taniarascia.github.io/new-moon/) for now)
+- Multi-cursor editing (feature from [CodeMirror](https://codemirror.net/))
+- No database because the notes are stored in your browser
 
-### `npm start`
+# About 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+This app is heavily inspired in the [Tania Rascia's Takenote](https://github.com/taniarascia/takenote) 
+that I found when searching for good self-hosted note taking apps. In the
+future developments it will also have some minor inspirations on the 
+[QingWei-Li's Notea](https://github.com/QingWei-Li/notea).
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+I found that Takenote is a well feature app, but its missing a way to interact
+with it in mobile. I want a note taking app that I can access everywhere. I
+thought of adding it to Takenote but I was take it as a opportunity to create a
+good and kind of big project with React and Typescript, applying some of the
+knowledge I recently got and gaining some more, and this is the result of my
+time on it.
 
-### `npm test`
+# Future development
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+I want to make this app full feature and more useful, and for that I want to
+add the next features in the near future
 
-### `npm run build`
+- Database mode to multi place access (described below)
+- Export/Import your notes
+- Note categories, for better filter your categories
+- Keyboard shortcuts for easiness in working with it
+- Progressive web app, or even a mobile app version
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# Database mode (Future feature)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+This is a mode that I found lacking in some of the applications I tried. 
+[Takenote](https://github.com/taniarascia/takenote) has a feature kind of like
+this, but is locked to using github as storage. [Notea](https://github.com/QingWei-Li/notea)
+has a feature like this, because is embedded in a server, and uses one of
+several storage services to provide that feature.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+What I want is an abstraction, meaning, this application is a client, that will
+be able to work in local storage mode, or cloud. For the last one, there will be 
+well defined API endpoints that the application searches, the user only needs
+to point for the server address that provides data on those endpoints.
 
-### `npm run eject`
+I will also make a server application that will implement those API endpoints and 
+anyone will be able to install and make the pair the two parts.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+# Use this application
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+There is a [demo version](http://easilok-notes.netlify.com) of the application
+online for anyone to try (local browser storage).
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+To host this application, it's very simple, as it is a simple react app. 
+Just clone the repo, install the dependencies with
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```bash
+npm install
+```
 
-## Learn More
+And build the production version with
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+npm build
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Then the application can be served from the build folder.
 
-### Code Splitting
+For development, you can run the command:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```bash
+npm start
+```
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+That will build and spin up a local server.

@@ -1,24 +1,25 @@
-import Swal, { SweetAlertIcon, SweetAlertPosition } from 'sweetalert2'
+import Swal, { SweetAlertIcon, SweetAlertPosition } from 'sweetalert2';
 
-import '../styles/sweetalert.scss'
+import '../styles/sweetalert.scss';
 
 interface SwalConfirmProps {
-  title: string
-  text: string
-  icon?: SweetAlertIcon
+  title: string;
+  text: string;
+  icon?: SweetAlertIcon;
 }
 
 interface SwalToastProps {
-  title: string
-  text?: string
-  icon?: SweetAlertIcon
-  position?: SweetAlertPosition
-  timer?: number
+  title: string;
+  text?: string;
+  icon?: SweetAlertIcon;
+  position?: SweetAlertPosition;
+  timer?: number;
 }
 
 // Promise<SweetAlertResult<Awaited<T>>>;
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const SwalConfirm = (props: SwalConfirmProps) => {
-  const icon = props.icon || 'info'
+  const icon = props.icon || 'info';
 
   return Swal.fire({
     title: props.title,
@@ -29,14 +30,15 @@ export const SwalConfirm = (props: SwalConfirmProps) => {
     showConfirmButton: true,
     focusCancel: true,
     focusConfirm: false,
-  })
-}
+  });
+};
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const SwalToast = (props: SwalToastProps) => {
-  const icon = props.icon || 'info'
-  const position = props.position || 'bottom-right'
-  const timer = props.timer || 3000
-  const text = props.text || ''
+  const icon = props.icon || 'info';
+  const position = props.position || 'bottom-right';
+  const timer = props.timer || 3000;
+  const text = props.text || '';
 
   return Swal.fire({
     title: props.title,
@@ -47,5 +49,5 @@ export const SwalToast = (props: SwalToastProps) => {
     position: position,
     timer: timer,
     showConfirmButton: false,
-  })
-}
+  });
+};

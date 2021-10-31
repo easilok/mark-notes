@@ -3,4 +3,4 @@ export const Styles = {
   appPrimaryColor: '#D65A31',
   appLightColor: '#eeeeee',
   appMediumColor: '#393e46',
-}
+};

@@ -1,9 +1,9 @@
-import React from 'react'
-import ReactMarkdown from 'react-markdown'
-import rehypeHighlight from 'rehype-highlight'
-import remarkGfm from 'remark-gfm'
+import React from 'react';
+import ReactMarkdown from 'react-markdown';
+import rehypeHighlight from 'rehype-highlight';
+import remarkGfm from 'remark-gfm';
 
-import '../styles/takenote_previewer.scss'
+import '../styles/takenote_previewer.scss';
 
 // interface ListItemProps {
 //   checked: boolean;
@@ -11,9 +11,10 @@ import '../styles/takenote_previewer.scss'
 // }
 
 interface NotePreviewProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const renderListItem = (props: any) => {
   if (props.checked !== null && props.checked !== undefined) {
     return (
@@ -26,11 +27,12 @@ const renderListItem = (props: any) => {
         />
         {props.children}
       </React.Fragment>
-    )
+    );
   }
+
   // otherwise default to list item
-  return props.node
-}
+  return props.node;
+};
 
 const NotePreview: React.FC<NotePreviewProps> = (props) => {
   return (
@@ -41,9 +43,10 @@ const NotePreview: React.FC<NotePreviewProps> = (props) => {
       components={{
         input: renderListItem,
       }}
-      children={props.children as string}
-    />
-  )
-}
+    >
+      {props.children as string}
+    </ReactMarkdown>
+  );
+};
 
-export default NotePreview
+export default NotePreview;

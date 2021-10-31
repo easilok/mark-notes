@@ -1,31 +1,31 @@
-import { useEffect } from 'react'
-import { useAppSelector, useAppDispatch } from './hooks/store'
-import NoteApp from './pages/Note'
-import MainMenu from './components/MainMenu'
-import EmptySelection from './pages/EmptySelection'
+import React, { useEffect } from 'react';
+import { useAppSelector, useAppDispatch } from './hooks/store';
+import NoteApp from './pages/Note';
+import MainMenu from './components/MainMenu';
+import EmptySelection from './pages/EmptySelection';
 
-import { loadNotes } from './store/slices/notesSlice'
-import { loadUserSettings } from './store/slices/settingsSlice'
-import { sync } from './store/slices/syncSlice'
+import { loadNotes } from './store/slices/notesSlice';
+import { loadUserSettings } from './store/slices/settingsSlice';
+import { sync } from './store/slices/syncSlice';
 
-import { useInterval } from './hooks/interval'
+import { useInterval } from './hooks/interval';
 
-import './styles/App.scss'
+import './styles/App.scss';
 
-function App() {
+const App: React.FC = () => {
   const {
     notes,
     categories,
     currentNote,
     pendingSync,
     loading: notesLoading,
-  } = useAppSelector((state) => state.notes)
-  const dispatch = useAppDispatch()
+  } = useAppSelector((state) => state.notes);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(loadNotes())
-    dispatch(loadUserSettings())
-  }, [dispatch])
+    dispatch(loadNotes());
+    dispatch(loadUserSettings());
+  }, [dispatch]);
 
   useInterval(() => {
     if (!notesLoading) {
@@ -35,9 +35,9 @@ function App() {
           currentNote,
           pendingSync,
         })
-      )
+      );
     }
-  }, 10000)
+  }, 10000);
 
   // useEffect(() => {
   //   console.log("Set interval");
@@ -62,7 +62,7 @@ function App() {
         <EmptySelection />
       )}
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

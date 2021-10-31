@@ -1,9 +1,10 @@
-import '../styles/menu-item.scss'
+import React from 'react';
+import '../styles/menu-item.scss';
 
 interface NoteItemProps {
-  title: string
-  filename: string
-  onItemClick: () => void
+  title: string;
+  filename: string;
+  onItemClick: () => void;
 }
 
 const NoteItem: React.FC<NoteItemProps> = (props) => {
@@ -15,7 +16,7 @@ const NoteItem: React.FC<NoteItemProps> = (props) => {
       </div>
       <button className="note-item__action">...</button>
     </div>
-  )
-}
+  );
+};
 
-export default NoteItem
+export default NoteItem;

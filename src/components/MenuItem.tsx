@@ -1,22 +1,22 @@
-import React from 'react'
+import React from 'react';
 
 interface MenuItemProps {
-  title: string
-  iconify: boolean
-  active: boolean
-  onMenuClick: () => void
-  icon: React.ReactElement
+  title: string;
+  iconify: boolean;
+  active: boolean;
+  onMenuClick: () => void;
+  icon: React.ReactElement;
 }
 
 const MenuItem: React.FC<MenuItemProps> = (props) => {
-  const { iconify, active } = props
+  const { iconify, active } = props;
 
-  let menuClassNames = ''
+  let menuClassNames = '';
   if (iconify) {
-    menuClassNames += 'iconify '
+    menuClassNames += 'iconify ';
   }
   if (active) {
-    menuClassNames += 'active '
+    menuClassNames += 'active ';
   }
 
   return (
@@ -24,7 +24,7 @@ const MenuItem: React.FC<MenuItemProps> = (props) => {
       {props.icon}
       {!iconify && <h4>{props.title}</h4>}
     </div>
-  )
-}
+  );
+};
 
-export default MenuItem
+export default MenuItem;

@@ -1,27 +1,28 @@
-import { Edit, Eye, Columns, Bookmark, Layers, Trash2 } from 'react-feather'
+import React from 'react';
+import { Edit, Eye, Columns, Bookmark, Layers, Trash2 } from 'react-feather';
 
 interface EditorActionsProps {
-  editMode: boolean
-  favorite?: boolean
-  lastSync: string
-  onSplit: () => void
-  onFavorite: () => void
-  onCategoryChange: () => void
-  onEditModeChange: () => void
-  onSave: () => void
-  onDelete: () => void
-  onSync: () => void
+  editMode: boolean;
+  favorite?: boolean;
+  lastSync: string;
+  onSplit: () => void;
+  onFavorite: () => void;
+  onCategoryChange: () => void;
+  onEditModeChange: () => void;
+  onSave: () => void;
+  onDelete: () => void;
+  onSync: () => void;
 }
 
-export default function EditorActions(props: EditorActionsProps) {
-  const { editMode } = props
-  const favorite = props.favorite || false
+const EditorActions: React.FC<EditorActionsProps> = (props) => {
+  const { editMode } = props;
+  const favorite = props.favorite || false;
 
   const EditModeIcon = editMode ? (
     <Eye onClick={props.onEditModeChange} />
   ) : (
     <Edit onClick={props.onEditModeChange} />
-  )
+  );
 
   return (
     <div className="editor-actions">
@@ -42,5 +43,7 @@ export default function EditorActions(props: EditorActionsProps) {
         <Trash2 onClick={props.onDelete} />
       </section>
     </div>
-  )
+  );
 }
+
+export default EditorActions;

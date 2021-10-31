@@ -1,12 +1,13 @@
-import { PlusCircle } from 'react-feather'
+import React from 'react';
+import { PlusCircle } from 'react-feather';
 
-import { useAppDispatch } from '../hooks/store'
-import { newNote } from '../store/slices/notesSlice'
+import { useAppDispatch } from '../hooks/store';
+import { newNote } from '../store/slices/notesSlice';
 
 const EmptySelection: React.FC = () => {
   // dispatch group
-  const dispatch = useAppDispatch()
-  const _newNote = () => dispatch(newNote())
+  const dispatch = useAppDispatch();
+  const _newNote = () => dispatch(newNote());
 
   return (
     <div className="empty-page">
@@ -18,7 +19,7 @@ const EmptySelection: React.FC = () => {
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default EmptySelection
+export default EmptySelection;

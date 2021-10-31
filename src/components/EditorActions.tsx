@@ -1,5 +1,5 @@
 import React from 'react';
-import { Edit, Eye, Columns, Bookmark, Layers, Trash2 } from 'react-feather';
+import { Edit, Eye, Columns, Bookmark, Layers, Trash2, Download } from 'react-feather';
 
 interface EditorActionsProps {
   editMode: boolean;
@@ -12,6 +12,7 @@ interface EditorActionsProps {
   onSave: () => void;
   onDelete: () => void;
   onSync: () => void;
+  onDownload: () => void;
 }
 
 const EditorActions: React.FC<EditorActionsProps> = (props) => {
@@ -34,6 +35,7 @@ const EditorActions: React.FC<EditorActionsProps> = (props) => {
           className={favorite ? 'active' : ''}
         />
         <Layers onClick={props.onCategoryChange} />
+        <Download onClick={props.onDownload} />
       </section>
       <section>
         <span onClick={props.onSync}>{props.lastSync}</span>

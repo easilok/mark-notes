@@ -1,7 +1,7 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { Book, PlusCircle, Bookmark, UploadCloud } from 'react-feather';
 import { useAppSelector, useAppDispatch } from '../hooks/store';
-import { newNote, openNote, scanNotes } from '../store/slices/notesSlice';
+import { newNote, openNote, scanNotes, importNote } from '../store/slices/notesSlice';
 import {
   setPreviewNote,
   toogleMenuCollapsed,
@@ -14,8 +14,11 @@ import NotesMenu from './NotesMenu';
 import MenuItem from './MenuItem';
 import { SwalConfirm, SwalToast } from '../helpers/SweetAlert';
 
+import { importNote as browserImportNote } from '../helpers/browserFileHandling';
+
 const MainMenu: React.FC = () => {
   const [showNotesList, setShowNotesList] = useState(false);
+  const fileInput = useRef<HTMLInputElement>(null);
   const minimizeMenu = useAppSelector(
     (state) => state.settings.general.menuCollapsed
   );
@@ -27,6 +30,7 @@ const MainMenu: React.FC = () => {
     // dispatch(loadNotes());
     dispatch(scanNotes(notes));
   }, [dispatch, notes]);
+  const _importNote = (filename: string, content: string) => dispatch(importNote({ filename, content }));
 
   const notesClickHandler = useCallback(() => {
     dispatch(setCurrentMenu(MENU_SELECTION.NOTES));
@@ -58,6 +62,26 @@ const MainMenu: React.FC = () => {
       }
     });
   }, [_scan]);
+
+  const onImportHandler = useCallback(() => {
+    // const fileInputEl = document.querySelector("#file-input") as HTMLInputElement;
+    // if (fileInputEl) {
+    //   fileInputEl.click();
+    // }
+    if (fileInput.current) {
+      fileInput.current.click();
+    }
+  }, [fileInput]);
+
+  const onFileImportHandler = useCallback(() => {
+    if (fileInput.current && fileInput.current.files) {
+      browserImportNote(fileInput.current.files, (filename, e) => {
+        if (e.target) {
+          _importNote(filename, e.target.result as string);
+        }
+      });
+    }
+  }, [fileInput]);
 
   let notesList = notes;
 
@@ -98,12 +122,22 @@ const MainMenu: React.FC = () => {
         </section>
         <section>
           <MenuItem
+            onMenuClick={onImportHandler}
+            iconify={minimizeMenu}
+            active={false}
+            title="Import"
+            icon={<UploadCloud />}
+          />
+          <MenuItem
             onMenuClick={onScanFilesHandler}
             iconify={minimizeMenu}
             active={false}
-            title="Notes"
+            title="Scan"
             icon={<UploadCloud />}
           />
+          <input type="file" id="file-input" ref={fileInput}
+            accept="text/plain" style={{ display: "none" }}
+            onChange={onFileImportHandler} />
         </section>
       </SidePanel>
       <NotesMenu

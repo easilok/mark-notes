@@ -19,6 +19,11 @@ export interface NoteState extends ApplicationData {
   opening: boolean;
 }
 
+interface QueuePayload {
+  pendingSync: NoteInterface[];
+  note: NoteInterface;
+}
+
 const pushNoteInformation = (state: NoteState) => {
   if (state.currentNote.filename.length === 0) {
     return;
@@ -38,27 +43,32 @@ const pushNoteInformation = (state: NoteState) => {
   }
 };
 
-const queueNoteSaving = ({ currentNote, pendingSync }: NoteState) => {
+const queueNoteSaving = ({ note, pendingSync}: QueuePayload): NoteInterface[] => {
+  const newPendingSync = [...pendingSync];
   // Should be queueing only the notes that changed
-  if (currentNote.filename.length === 0 && currentNote.content.length === 0) {
-    return;
+  if (note.filename.length === 0 && note.content.length === 0) {
+
+    return newPendingSync;
   }
 
-  if (currentNote.content.length === 0) {
-    return;
+  if (note.content.length === 0) {
+
+    return newPendingSync;
   }
 
-  if (currentNote.filename.length === 0) {
-    currentNote.filename = new Date().toISOString();
+  if (note.filename.length === 0) {
+    note.filename = new Date().toISOString();
   }
-  const noteIndex = pendingSync.findIndex(
-    (n) => n.filename === currentNote.filename
+  const noteIndex = newPendingSync.findIndex(
+    (n) => n.filename === note.filename
   );
   if (noteIndex < 0) {
-    pendingSync.push({ ...currentNote });
+    newPendingSync.push({ ...note });
   } else {
-    pendingSync[noteIndex].content = currentNote.content;
+    newPendingSync[noteIndex].content = note.content;
   }
+
+  return newPendingSync;
 };
 
 const initialState: NoteState = {
@@ -142,7 +152,10 @@ export const notesSlice = createSlice({
       if (state.currentNote.content !== action.payload) {
         state.currentNote.content = action.payload;
         pushNoteInformation(state);
-        queueNoteSaving(state);
+        state.pendingSync = queueNoteSaving({
+          note: state.currentNote,
+          pendingSync: state.pendingSync,
+        });
       }
     },
     newNote: (state) => {
@@ -190,6 +203,27 @@ export const notesSlice = createSlice({
         }
       }
     },
+    importNote: (state, {payload}: PayloadAction<{filename: string, content: string}>) => {
+      if (payload.filename.length === 0 || payload.content.length === 0) {
+        return;
+      }
+      const note: NoteInterface = {
+        filename: payload.filename,
+        content: payload.content
+      };
+      const noteIndex = state.notes.findIndex(n => n.filename === note.filename);
+      if (noteIndex < 0) {
+        state.notes.push({
+          filename: note.filename,
+          title: convertTitle(note.content),
+          favorite: false
+        });
+      }
+      state.pendingSync = queueNoteSaving({
+        note, 
+        pendingSync: state.pendingSync
+    });
+    }
   },
 });
 
@@ -210,6 +244,7 @@ export const {
   scanNotes,
   finishScanNotes,
   toggleFavorite,
+  importNote,
 } = notesSlice.actions;
 
 export const selectNotes = (state: RootState): NoteInformation[] => state.notes.notes;

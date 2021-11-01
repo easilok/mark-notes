@@ -11,6 +11,7 @@ markdown.
   [New Moon Theme](https://taniarascia.github.io/new-moon/) for now)
 - Multi-cursor editing (feature from [CodeMirror](https://codemirror.net/))
 - No database because the notes are stored in your browser
+- Export/Import your notes in markdown
 
 # About
 
@@ -32,10 +33,10 @@ I want to make this app full feature and more useful, and for that I want to
 add the next features in the near future
 
 - Database mode to multi place access (described below)
-- Export/Import your notes
 - Note categories, for better filter your categories
 - Keyboard shortcuts for easiness in working with it
-- Progressive web app, or even a mobile app version
+- Progressive web app, or even a mobile app version (some initial setup is
+  already made)
 
 # Database mode (Future feature)
 

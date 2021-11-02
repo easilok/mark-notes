@@ -1,12 +1,7 @@
 import React from 'react';
-import {
-  Edit,
-  Eye,
-  Columns,
-  Bookmark,
-  Layers,
-  Trash2,
-} from 'react-feather';
+import { Edit, Eye, Columns, Bookmark, Layers, Trash2 } from 'react-feather';
+
+import TimeAgo from '../components/TimeAgo';
 
 interface EditorActionsProps {
   editMode: boolean;
@@ -43,7 +38,14 @@ const EditorActions: React.FC<EditorActionsProps> = (props) => {
         <Layers onClick={props.onCategoryChange} />
       </section>
       <section>
+        <TimeAgo
+          interval={5000}
+          timeReference={props.lastSync}
+          onClick={props.onSync}
+        />
+        {/*
         <span onClick={props.onSync}>{props.lastSync}</span>
+        */}
         {/*
         <Save onClick={props.onSave} />
         */}

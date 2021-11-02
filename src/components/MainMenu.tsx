@@ -29,7 +29,7 @@ import { SwalConfirm, SwalToast } from '../helpers/SweetAlert';
 
 import {
   downloadNote,
-  importNote as browserImportNote
+  importNote as browserImportNote,
 } from '../helpers/browserFileHandling';
 
 const MainMenu: React.FC = () => {
@@ -40,7 +40,9 @@ const MainMenu: React.FC = () => {
     (state) => state.settings.general.menuCollapsed
   );
   const currentMenu = useAppSelector((state) => state.settings.currentMenu);
-  const { notes, favorites, currentNote } = useAppSelector((state) => state.notes);
+  const { notes, favorites, currentNote } = useAppSelector(
+    (state) => state.notes
+  );
   const hasNoteLoaded = currentNote.filename.length > 0;
   // Dispatch group
   const dispatch = useAppDispatch();

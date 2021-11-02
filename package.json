@@ -21,6 +21,7 @@
     "@types/react": "^17.0.33",
     "@types/react-dom": "^17.0.10",
     "@uiw/react-codemirror": "^4.1.0",
+    "dayjs": "^1.10.7",
     "node-sass": "^6.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

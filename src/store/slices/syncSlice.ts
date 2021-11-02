@@ -21,10 +21,7 @@ export const syncSlice = createSlice({
     },
     finishSync: (state) => {
       state.syncing = false;
-      state.lastSync = new Date().toLocaleString('en-GB', {
-        dateStyle: 'short',
-        timeStyle: 'short',
-      });
+      state.lastSync = new Date().toISOString();
     },
   },
 });

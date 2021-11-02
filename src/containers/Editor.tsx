@@ -25,6 +25,7 @@ const Editor: React.FC = () => {
     useAppSelector((state) => state.notes);
   const lastSync = useAppSelector((state) => state.sync.lastSync);
   const [splitPanel, setSplitPanel] = useState(false);
+  // const [lastSyncHuman, setLastSyncHuman] = useState('');
 
   // dispatch function group
   const dispatch = useAppDispatch();
@@ -89,7 +90,7 @@ const Editor: React.FC = () => {
           onDelete={deleteNoteHandler}
           onSync={_sync}
           onFavorite={_toogleFavorite}
-          onCategoryChange={() => { }} // eslint-disable-line @typescript-eslint/no-empty-function
+          onCategoryChange={() => {}} // eslint-disable-line @typescript-eslint/no-empty-function
         />
       </div>
     </div>

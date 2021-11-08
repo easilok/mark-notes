@@ -12,6 +12,7 @@ markdown.
 - Multi-cursor editing (feature from [CodeMirror](https://codemirror.net/))
 - No database because the notes are stored in your browser
 - Export/Import your notes in markdown
+- Server mode with database to multi place access (described below)
 
 # About
 
@@ -32,13 +33,12 @@ time on it.
 I want to make this app full feature and more useful, and for that I want to
 add the next features in the near future
 
-- Database mode to multi place access (described below)
 - Note categories, for better filter your categories
 - Keyboard shortcuts for easiness in working with it
 - Progressive web app, or even a mobile app version (some initial setup is
   already made)
 
-# Database mode (Future feature)
+# Server mode with database
 
 This is a mode that I found lacking in some of the applications I tried.
 [Takenote](https://github.com/taniarascia/takenote) has a feature kind of like
@@ -46,13 +46,129 @@ this, but is locked to using github as storage. [Notea](https://github.com/QingW
 has a feature like this, because is embedded in a server, and uses one of
 several storage services to provide that feature.
 
-What I want is an abstraction, meaning, this application is a client, that will
-be able to work in local storage mode, or cloud. For the last one, there will be
-well defined API endpoints that the application searches, the user only needs
-to point for the server address that provides data on those endpoints.
+What I want is an abstraction, meaning, this application is a client, that is
+able to work in local storage mode, or with a cloud setup to multi access. 
 
-I will also make a server application that will implement those API endpoints and
-anyone will be able to install and make the pair the two parts.
+At this moment, the application needs the following REST endpoints to work properly:
+
+#### GET /api/catalog
+This endpoint should return the catalog of the current available notes with the following JSON structure:
+```JSON
+{
+    "data": {
+        "notes": [
+            {
+                "filename": "note1",
+                "title": "note title 1",
+                "favorite": false
+            },
+            {
+                "filename": "note2",
+                "title": "note title 2",
+                "favorite": false
+            }
+        ]
+    }
+}            
+```
+
+#### PATCH /api/favorites/:filename
+This endpoint receives in the URL the filename (as returned in the previous endpoint)
+and in the body is sent JSON data as follows:
+```JSON
+{
+    "favorite": true/false
+}            
+```
+
+Any returned data is not currently used. The example server returns the following JSON structure:
+```JSON
+{
+    "data": {
+        "filename": "note1",
+        "title": "note title 1",
+        "favorite": true
+    }
+}            
+```
+
+#### GET /api/note/:filename
+This endpoint should return the content of the note represented with the URL field _filename_, and the data is the 
+following JSON structure:
+```JSON
+{
+    "data": {
+        "content": "## this is the note title 1",
+        "filename": "note1"
+    }
+}
+```
+
+#### PUT /api/note/:filename
+This endpoint receives in the URL the filename of the file to create/edit. The endpoint is the same 
+for a new note or a existing one. The server should know if the file exists or not to create or update it.
+The body of the request is filled with the following JSON data, that represents the content of the note:
+```JSON
+{
+    "content": "## this is the note title 1"
+}            
+```
+
+Any returned data is not currently used. The example server returns the following JSON structure:
+```JSON
+{
+    "data": {
+        "filename": "note1",
+        "title": "note title 1",
+        "favorite": true
+    }
+}            
+```
+
+#### DELETE /api/note/:filename
+This endpoint should delete the note represented in the URL as the field _filename_ and remove it 
+from the catalog. 
+
+Any returned data is not currently used. The example server returns the following JSON structure:
+```JSON
+{
+    "data": true,
+    "message": ""
+}
+```
+
+#### GET /api/note/scan
+This endpoint should fetch the server for notes that are note cataloged and add them. This allows
+to manually add notes to the server file system and then catalog them into the application. This is a 
+feature not mandatory, and to not implement it, it should only return an empty array in the structure below.
+
+The endpoint should return the following JSON structure, that contains only the notes that were not 
+cataloged:
+```JSON
+{
+    "data": {
+        "notes": [
+            {
+                "filename": "missingNote1",
+                "title": "Missing note 1 title",
+                "favorite": false
+            },
+            {
+                "filename": "missingNote2",
+                "title": "Missing note 2 title",
+                "favorite": false
+            }
+        ]
+    }
+}
+```
+
+[Here I have a simple server in go that anyone can use](https://github.com/easilok/mark-notes-server).
+
+# Future Work
+
+The next big step is to add authentication to the server mode. After that, I'll
+work on the search note feature and finally the categories.
 
 # Use this application
 

@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { v4 as uuid } from 'uuid';
 import { RootState } from '../store';
 import {
   NoteInterface,
@@ -58,7 +59,7 @@ const queueNoteSaving = ({
   }
 
   if (note.filename.length === 0) {
-    note.filename = new Date().toISOString();
+    note.filename = uuid();
   }
   const noteIndex = newPendingSync.findIndex(
     (n) => n.filename === note.filename
@@ -133,8 +134,15 @@ export const notesSlice = createSlice({
       state.isFavorite = false;
     },
     finishOpenNote: (state, action: PayloadAction<string>) => {
-      state.currentNote.content = action.payload;
       state.opening = false;
+      const currentPendingIndex = state.pendingSync.findIndex(
+        n => n.filename === state.currentNote.filename
+      );
+      // if current note is pending sync don't update it
+      if (currentPendingIndex > 0) {
+        return;
+      }
+      state.currentNote.content = action.payload;
       const noteInfo = state.notes.find(
         (n) => n.filename === state.currentNote.filename
       );
@@ -162,7 +170,7 @@ export const notesSlice = createSlice({
     newNote: (state) => {
       // queueNoteSaving(state);
       state.currentNote = {
-        filename: new Date().toISOString(),
+        filename: uuid(),
         content: '',
       };
       state.isFavorite = false;
@@ -259,5 +267,8 @@ export const selectFavorites = (state: RootState): NoteInformation[] =>
   state.notes.favorites;
 export const selectPendingSync = (state: RootState): NoteInterface[] =>
   state.notes.pendingSync;
+export const selectCurrentNote = (state: RootState): NoteInterface =>
+  state.notes.currentNote;
+
 
 export default notesSlice.reducer;

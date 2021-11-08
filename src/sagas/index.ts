@@ -11,8 +11,11 @@ import {
   finishDeleteNote,
   openNote,
   finishOpenNote,
+  selectNotes,
+  selectCurrentNote,
   selectPendingSync,
   clearQueue,
+  toggleFavorite,
 } from '../store/slices/notesSlice';
 import {
   syncNoteData,
@@ -21,6 +24,14 @@ import {
   removeLocalNote,
   openLocalNote,
 } from '../api/local';
+import {
+  fetchNoteInformationFromServer,
+  putNoteOnServer,
+  fetchNoteFromServer,
+  deleteNoteOnServer,
+  toggleNoteFavoriteOnServer,
+  scanNotesInServer,
+} from '../api/server';
 import {
   ScanAction,
   SyncAction,
@@ -31,11 +42,19 @@ import {
 
 import { NoteInterface, NoteInformation } from '../models/Note';
 
+const isServerMode = process.env.REACT_APP_SERVER_MODE;
+
 function* syncData({ payload }: SyncAction) {
   // const isDemo = true;
   try {
     // yield console.log("sync saga called");
-    yield syncNoteData(payload);
+    if (isServerMode) {
+      yield payload.pendingSync.map(n => putNoteOnServer(n));
+      // const currentNote: NoteInterface = yield select(selectCurrentNote);
+      // yield put(openNote(currentNote.filename));
+    } else {
+      yield syncNoteData(payload);
+    }
     yield put(clearQueue());
     yield put(finishSync());
     yield put(loadNotes());
@@ -47,9 +66,21 @@ function* syncData({ payload }: SyncAction) {
 
 function* fetchNotes() {
   try {
-    // yield console.log("Saga Notes fetched");
-    const noteData: ApplicationData = yield loadNoteInformation();
-    // yield console.log("Saga Notes putting :", noteData);
+    let noteData: ApplicationData = {
+      notes: [],
+      favorites: [],
+      categories: [],
+    };
+    if (isServerMode) {
+      const { notes, favorites } = yield fetchNoteInformationFromServer();
+      noteData.notes = notes;
+      noteData.favorites = favorites;
+      // yield console.log("Saga Notes putting :", noteData);
+    } else {
+      // yield console.log("Saga Notes fetched");
+      noteData = yield loadNoteInformation();
+      // yield console.log("Saga Notes putting :", noteData);
+    }
     yield put(finishLoadNotes(noteData));
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
@@ -62,7 +93,12 @@ function* fetchNotes() {
 function* fetchMissingNotes({ payload }: ScanAction) {
   try {
     // yield console.log("Saga Missing Notes fetched");
-    const noteData: NoteInformation[] = yield scanMissingNotes(payload);
+    let noteData: NoteInformation[];
+    if (isServerMode) {
+      noteData = yield scanNotesInServer();
+    } else {
+      noteData = yield scanMissingNotes(payload);
+    }
     // yield console.log("Saga Missing Notes putting :", noteData);
     yield put(finishScanNotes(noteData));
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -75,8 +111,12 @@ function* fetchMissingNotes({ payload }: ScanAction) {
 
 function* removeNote({ payload }: DeleteNoteAction) {
   try {
-    // yield console.log("Saga Deleting Notes: " + payload);
-    yield removeLocalNote(payload);
+    if (isServerMode) {
+      yield deleteNoteOnServer(payload);
+    } else {
+      // yield console.log("Saga Deleting Notes: " + payload);
+      yield removeLocalNote(payload);
+    }
     yield put(finishDeleteNote(payload));
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
@@ -95,9 +135,35 @@ function* fetchNote({ payload }: OpenNoteAction) {
     if (pendingNote) {
       noteContent = pendingNote.content;
     } else {
-      noteContent = yield openLocalNote(payload);
+      if (isServerMode) {
+        const fetchedNote: NoteInterface = yield fetchNoteFromServer(payload);
+        noteContent = fetchedNote.content;
+      } else {
+        noteContent = yield openLocalNote(payload);
+      }
     }
     yield put(finishOpenNote(noteContent));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    if (error.message) {
+      yield put(errorLoadNotes(error.message));
+    }
+  }
+}
+
+function* toggleFavoriteNote() {
+  try {
+    if (isServerMode) {
+      const currentNote: NoteInterface = yield select(selectCurrentNote);
+      const notesState: NoteInformation[] = yield select(selectNotes);
+      const noteFavorited = notesState.find(n => n.filename === currentNote.filename);
+      let setFavorite = false;
+      if (noteFavorited) {
+        setFavorite = noteFavorited.favorite;
+      }
+      yield toggleNoteFavoriteOnServer(currentNote.filename, setFavorite);
+      yield put(loadNotes());
+    }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     if (error.message) {
@@ -114,6 +180,7 @@ function* rootSaga() {
     takeLatest(scanNotes.type, fetchMissingNotes),
     takeEvery(deleteNote.type, removeNote),
     takeLatest(openNote.type, fetchNote),
+    takeEvery(toggleFavorite.type, toggleFavoriteNote),
   ]);
 }
 

@@ -136,7 +136,7 @@ export const notesSlice = createSlice({
     finishOpenNote: (state, action: PayloadAction<string>) => {
       state.opening = false;
       const currentPendingIndex = state.pendingSync.findIndex(
-        n => n.filename === state.currentNote.filename
+        (n) => n.filename === state.currentNote.filename
       );
       // if current note is pending sync don't update it
       if (currentPendingIndex > 0) {
@@ -269,6 +269,5 @@ export const selectPendingSync = (state: RootState): NoteInterface[] =>
   state.notes.pendingSync;
 export const selectCurrentNote = (state: RootState): NoteInterface =>
   state.notes.currentNote;
-
 
 export default notesSlice.reducer;

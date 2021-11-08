@@ -49,7 +49,7 @@ function* syncData({ payload }: SyncAction) {
   try {
     // yield console.log("sync saga called");
     if (isServerMode) {
-      yield payload.pendingSync.map(n => putNoteOnServer(n));
+      yield payload.pendingSync.map((n) => putNoteOnServer(n));
       // const currentNote: NoteInterface = yield select(selectCurrentNote);
       // yield put(openNote(currentNote.filename));
     } else {
@@ -156,7 +156,9 @@ function* toggleFavoriteNote() {
     if (isServerMode) {
       const currentNote: NoteInterface = yield select(selectCurrentNote);
       const notesState: NoteInformation[] = yield select(selectNotes);
-      const noteFavorited = notesState.find(n => n.filename === currentNote.filename);
+      const noteFavorited = notesState.find(
+        (n) => n.filename === currentNote.filename
+      );
       let setFavorite = false;
       if (noteFavorited) {
         setFavorite = noteFavorited.favorite;

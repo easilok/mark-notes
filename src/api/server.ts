@@ -8,22 +8,22 @@ import {
 
 interface ServerCatalogResult {
   data: {
-    notes: NoteInformation[],
-  }
+    notes: NoteInformation[];
+  };
 }
 
 interface ServerNoteActionResult {
-  data: NoteInformation,
+  data: NoteInformation;
 }
 
 interface ServerNoteResult {
-  data: NoteInterface,
+  data: NoteInterface;
 }
 
 export const fetchNoteInformationFromServer = (): Promise<ApplicationData> =>
   new Promise<ApplicationData>((resolve, reject) => {
     fetch(`${process.env.REACT_APP_SERVER_HOST}/api/catalog`)
-      .then(result => result.json())
+      .then((result) => result.json())
       .then((resData: ServerCatalogResult) => {
         const response: ApplicationData = {
           notes: [],
@@ -32,7 +32,7 @@ export const fetchNoteInformationFromServer = (): Promise<ApplicationData> =>
         };
         if (resData.data && resData.data.notes) {
           response.notes = [...resData.data.notes];
-          response.notes.forEach(n => {
+          response.notes.forEach((n) => {
             if (n.favorite) {
               response.favorites.push({ ...n });
             }
@@ -42,13 +42,13 @@ export const fetchNoteInformationFromServer = (): Promise<ApplicationData> =>
           reject('Error fetching data');
         }
       })
-      .catch(error => reject(error));
+      .catch((error) => reject(error));
   });
 
 export const fetchNoteFromServer = (filename: string): Promise<NoteInterface> =>
   new Promise<NoteInterface>((resolve, reject) => {
     fetch(`${process.env.REACT_APP_SERVER_HOST}/api/note/${filename}`)
-      .then(result => result.json())
+      .then((result) => result.json())
       .then((resData: ServerNoteResult) => {
         if (resData.data && resData.data.content) {
           resolve(resData.data);
@@ -56,10 +56,12 @@ export const fetchNoteFromServer = (filename: string): Promise<NoteInterface> =>
           reject('Error fetching note');
         }
       })
-      .catch(error => reject(error));
+      .catch((error) => reject(error));
   });
 
-export const putNoteOnServer = (note: NoteInterface): Promise<NoteInformation> =>
+export const putNoteOnServer = (
+  note: NoteInterface
+): Promise<NoteInformation> =>
   new Promise<NoteInformation>((resolve, reject) => {
     fetch(`${process.env.REACT_APP_SERVER_HOST}/api/note/${note.filename}`, {
       method: 'PUT',
@@ -70,7 +72,7 @@ export const putNoteOnServer = (note: NoteInterface): Promise<NoteInformation> =
         content: note.content,
       }),
     })
-      .then(result => result.json())
+      .then((result) => result.json())
       .then((resData: ServerNoteActionResult) => {
         if (resData.data && resData.data.filename) {
           resolve(resData.data);
@@ -78,15 +80,17 @@ export const putNoteOnServer = (note: NoteInterface): Promise<NoteInformation> =
           reject('Error sending note');
         }
       })
-      .catch(error => reject(error));
+      .catch((error) => reject(error));
   });
 
-export const deleteNoteOnServer = (filename: string): Promise<NoteInformation> =>
+export const deleteNoteOnServer = (
+  filename: string
+): Promise<NoteInformation> =>
   new Promise<NoteInformation>((resolve, reject) => {
     fetch(`${process.env.REACT_APP_SERVER_HOST}/api/note/${filename}`, {
       method: 'DELETE',
     })
-      .then(result => result.json())
+      .then((result) => result.json())
       .then((resData: ServerNoteActionResult) => {
         if (resData.data && resData.data.filename) {
           resolve(resData.data);
@@ -94,10 +98,13 @@ export const deleteNoteOnServer = (filename: string): Promise<NoteInformation> =
           reject('Error deleting note');
         }
       })
-      .catch(error => reject(error));
+      .catch((error) => reject(error));
   });
 
-export const toggleNoteFavoriteOnServer = (filename: string, favorite: boolean): Promise<NoteInformation> =>
+export const toggleNoteFavoriteOnServer = (
+  filename: string,
+  favorite: boolean
+): Promise<NoteInformation> =>
   new Promise<NoteInformation>((resolve, reject) => {
     fetch(`${process.env.REACT_APP_SERVER_HOST}/api/favorites/${filename}`, {
       method: 'PATCH',
@@ -108,7 +115,7 @@ export const toggleNoteFavoriteOnServer = (filename: string, favorite: boolean):
         favorite: favorite,
       }),
     })
-      .then(result => result.json())
+      .then((result) => result.json())
       .then((resData: ServerNoteActionResult) => {
         if (resData.data && resData.data.filename) {
           resolve(resData.data);
@@ -116,13 +123,13 @@ export const toggleNoteFavoriteOnServer = (filename: string, favorite: boolean):
           reject('Error favoriting note');
         }
       })
-      .catch(error => reject(error));
+      .catch((error) => reject(error));
   });
 
 export const scanNotesInServer = (): Promise<NoteInformation[]> =>
   new Promise<NoteInformation[]>((resolve, reject) => {
     fetch(`${process.env.REACT_APP_SERVER_HOST}/api/note/scan`)
-      .then(result => result.json())
+      .then((result) => result.json())
       .then((resData: ServerCatalogResult) => {
         if (resData.data && resData.data.notes) {
           resolve(resData.data.notes);
@@ -130,5 +137,5 @@ export const scanNotesInServer = (): Promise<NoteInformation[]> =>
           reject('Error scanning notes');
         }
       })
-      .catch(error => reject(error));
+      .catch((error) => reject(error));
   });

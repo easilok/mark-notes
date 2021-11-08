@@ -47,12 +47,14 @@ has a feature like this, because is embedded in a server, and uses one of
 several storage services to provide that feature.
 
 What I want is an abstraction, meaning, this application is a client, that is
-able to work in local storage mode, or with a cloud setup to multi access. 
+able to work in local storage mode, or with a cloud setup to multi access.
 
 At this moment, the application needs the following REST endpoints to work properly:
 
 #### GET /api/catalog
+
 This endpoint should return the catalog of the current available notes with the following JSON structure:
+
 ```JSON
 {
     "data": {
@@ -69,19 +71,22 @@ This endpoint should return the catalog of the current available notes with the 
             }
         ]
     }
-}            
+}
 ```
 
 #### PATCH /api/favorites/:filename
+
 This endpoint receives in the URL the filename (as returned in the previous endpoint)
 and in the body is sent JSON data as follows:
+
 ```JSON
 {
     "favorite": true/false
-}            
+}
 ```
 
 Any returned data is not currently used. The example server returns the following JSON structure:
+
 ```JSON
 {
     "data": {
@@ -89,12 +94,14 @@ Any returned data is not currently used. The example server returns the followin
         "title": "note title 1",
         "favorite": true
     }
-}            
+}
 ```
 
 #### GET /api/note/:filename
-This endpoint should return the content of the note represented with the URL field _filename_, and the data is the 
+
+This endpoint should return the content of the note represented with the URL field _filename_, and the data is the
 following JSON structure:
+
 ```JSON
 {
     "data": {
@@ -105,16 +112,19 @@ following JSON structure:
 ```
 
 #### PUT /api/note/:filename
-This endpoint receives in the URL the filename of the file to create/edit. The endpoint is the same 
+
+This endpoint receives in the URL the filename of the file to create/edit. The endpoint is the same
 for a new note or a existing one. The server should know if the file exists or not to create or update it.
 The body of the request is filled with the following JSON data, that represents the content of the note:
+
 ```JSON
 {
     "content": "## this is the note title 1"
-}            
+}
 ```
 
 Any returned data is not currently used. The example server returns the following JSON structure:
+
 ```JSON
 {
     "data": {
@@ -122,14 +132,16 @@ Any returned data is not currently used. The example server returns the followin
         "title": "note title 1",
         "favorite": true
     }
-}            
+}
 ```
 
 #### DELETE /api/note/:filename
-This endpoint should delete the note represented in the URL as the field _filename_ and remove it 
-from the catalog. 
+
+This endpoint should delete the note represented in the URL as the field _filename_ and remove it
+from the catalog.
 
 Any returned data is not currently used. The example server returns the following JSON structure:
+
 ```JSON
 {
     "data": true,
@@ -138,12 +150,14 @@ Any returned data is not currently used. The example server returns the followin
 ```
 
 #### GET /api/note/scan
+
 This endpoint should fetch the server for notes that are note cataloged and add them. This allows
-to manually add notes to the server file system and then catalog them into the application. This is a 
+to manually add notes to the server file system and then catalog them into the application. This is a
 feature not mandatory, and to not implement it, it should only return an empty array in the structure below.
 
-The endpoint should return the following JSON structure, that contains only the notes that were not 
+The endpoint should return the following JSON structure, that contains only the notes that were not
 cataloged:
+
 ```JSON
 {
     "data": {

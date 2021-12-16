@@ -57,7 +57,7 @@ const MainMenu: React.FC = () => {
 
   const notesClickHandler = useCallback(() => {
     dispatch(setCurrentMenu(MENU_SELECTION.NOTES));
-    setShowNotesList(prevState => !prevState);
+    setShowNotesList((prevState) => !prevState);
   }, [dispatch, setShowNotesList]);
 
   const newNoteHandler = useCallback(() => {
@@ -67,7 +67,7 @@ const MainMenu: React.FC = () => {
 
   const bookmarksClickHandler = useCallback(() => {
     dispatch(setCurrentMenu(MENU_SELECTION.FAVORITES));
-    setShowNotesList(prevState => !prevState);
+    setShowNotesList((prevState) => !prevState);
   }, [dispatch]);
 
   const onScanFilesHandler = useCallback(() => {

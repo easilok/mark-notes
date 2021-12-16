@@ -1,0 +1,57 @@
+@import './_variables.scss';
+
+.error-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+}
+
+.error-page__content {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  padding: 1rem;
+  > * {
+    margin-bottom: 2rem;
+    width: 100%;
+    color: $app-palette-primary;
+  }
+  > span {
+    margin-bottom: 1rem;
+    color: $app-palette-light;
+    font-size: 1.35rem;
+  }
+}
+
+.error-reload {
+  position: fixed;
+  bottom: 30px;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: $app-palette-primary;
+  border: none;
+  color: $app-palette-light;
+  cursor: pointer;
+  animation-name: rotation;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-delay: 0s;
+  &:hover {
+    background-color: $palette-blue;
+  }
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

@@ -3,6 +3,7 @@ import { useAppSelector, useAppDispatch } from './hooks/store';
 import NoteApp from './pages/Note';
 import MainMenu from './components/MainMenu';
 import EmptySelection from './pages/EmptySelection';
+import Error from './pages/Error';
 
 import { loadNotes } from './store/slices/notesSlice';
 import { loadUserSettings } from './store/slices/settingsSlice';
@@ -19,6 +20,7 @@ const App: React.FC = () => {
     currentNote,
     pendingSync,
     loading: notesLoading,
+    error: notesError,
   } = useAppSelector((state) => state.notes);
   const dispatch = useAppDispatch();
 
@@ -52,6 +54,15 @@ const App: React.FC = () => {
   //   }, 10000);
   //   return () => clearInterval(timerRef);
   // }, [dispatch, notes, categories, currentNote, notesLoading, pendingSync]);
+  //
+
+  if (notesError.length > 0) {
+    return (
+      <div className="App">
+        <Error />
+      </div>
+    );
+  }
 
   return (
     <div className="App">

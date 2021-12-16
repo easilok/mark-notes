@@ -85,7 +85,7 @@ function* fetchNotes() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     if (error.message) {
-      yield put(errorLoadNotes(error));
+      yield put(errorLoadNotes(error.message));
     }
   }
 }

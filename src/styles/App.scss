@@ -12,3 +12,24 @@ body {
 .App {
   display: flex;
 }
+
+/* Works on Firefox */
+* {
+  // scrollbar-width: thin;
+  scrollbar-color: $app-palette-dark transparent;
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 7px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: $app-palette-dark;
+  border-radius: 20px;
+  border: 3px solid transparent;
+}

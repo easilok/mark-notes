@@ -11,6 +11,7 @@
 .editor__split-panel {
   display: flex;
   width: 100%;
+  overflow-y: hidden;
   flex: 1;
   background-color: $app-codemirror-default-bg;
   border: rgba(0, 0, 0, 0.3) 1px solid;
@@ -21,14 +22,16 @@
   border-right: $app-palette-medium 1px solid;
 }
 
-.editor__preview {
+.editor__preview,
+.editor__edit {
   // border: black 1px solid;
   /* border-radius: 10px; */
   flex: 1;
+  max-height: 100%;
+  overflow-y: auto;
 }
 
 .editor__edit {
-  flex: 1;
   padding: 1rem 0;
   font-size: 1rem;
 }

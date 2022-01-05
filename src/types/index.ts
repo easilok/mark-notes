@@ -45,3 +45,15 @@ export enum MENU_SELECTION {
   SCRATCHPAD = 'SCRATCHPAD',
   TRASH = 'TRASH',
 }
+
+export interface LoginCredentials {
+  username: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  refresh_token: string;
+  access_token: string;
+  expiryDate: string;
+}
+

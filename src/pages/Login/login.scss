@@ -1,0 +1,87 @@
+@import '../../styles/_variables.scss';
+
+div.text-separator {
+  background-color: inherit;
+  width: 100%;
+  border-bottom: 1px solid #000;
+  line-height: 0.1em;
+  // margin: 10px 0 20px;
+  text-align: center;
+  &.left {
+    text-align: left;
+  }
+  &.right {
+    text-align: right;
+  }
+  span {
+    // background:#fff;
+    background: inherit;
+    padding: 0 10px;
+  }
+  &.left span {
+    padding-left: 0;
+    padding-right: 10px;
+  }
+  &.right span {
+    padding-right: 0;
+    padding-left: 10px;
+  }
+}
+
+.container.login {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  > div {
+    width: 80%;
+    max-width: 600px;
+  }
+  .login__header {
+    margin-bottom: 2rem;
+    text-align: center;
+    h1 {
+      color: $nibble-color;
+      font-weight: normal;
+      text-transform: uppercase;
+    }
+  }
+  .login__oauth,
+  .login__separator,
+  .login__credentials {
+    background-color: #d4d4d4;
+    background-color: hsl(0, 0%, 96%);
+  }
+  .login__oauth,
+  .login__credentials {
+    padding: 2rem;
+    > form {
+      max-width: 300px;
+      margin: auto;
+    }
+  }
+  .login__oauth {
+    text-align: center;
+    > * {
+      margin: 0.5rem 0;
+    }
+  }
+  .login__register {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1.5rem 0;
+    > *:not(:last-child) {
+      margin-right: 0.75rem;
+    }
+  }
+  .login__separator {
+    padding: 0 5rem;
+    div.text-separator {
+      // max-width: 100px;
+      margin: auto;
+      border-bottom: 1px solid #ccc;
+      color: #ccc;
+    }
+  }
+}

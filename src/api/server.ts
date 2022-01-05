@@ -1,4 +1,4 @@
-import { ApplicationData } from '../types';
+import { ApplicationData, LoginResponse, LoginCredentials } from '../types';
 import {
   NoteInterface,
   NoteInformation,
@@ -20,9 +20,15 @@ interface ServerNoteResult {
   data: NoteInterface;
 }
 
-export const fetchNoteInformationFromServer = (): Promise<ApplicationData> =>
+export const fetchNoteInformationFromServer = (
+  token: string
+): Promise<ApplicationData> =>
   new Promise<ApplicationData>((resolve, reject) => {
-    fetch(`${process.env.REACT_APP_SERVER_HOST}/api/catalog`)
+    fetch(`${process.env.REACT_APP_SERVER_HOST}/api/catalog`, {
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    })
       .then((result) => result.json())
       .then((resData: ServerCatalogResult) => {
         const response: ApplicationData = {
@@ -45,9 +51,16 @@ export const fetchNoteInformationFromServer = (): Promise<ApplicationData> =>
       .catch((error) => reject(error));
   });
 
-export const fetchNoteFromServer = (filename: string): Promise<NoteInterface> =>
+export const fetchNoteFromServer = (
+  filename: string,
+  token: string
+): Promise<NoteInterface> =>
   new Promise<NoteInterface>((resolve, reject) => {
-    fetch(`${process.env.REACT_APP_SERVER_HOST}/api/note/${filename}`)
+    fetch(`${process.env.REACT_APP_SERVER_HOST}/api/note/${filename}`, {
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    })
       .then((result) => result.json())
       .then((resData: ServerNoteResult) => {
         if (resData.data && resData.data.content) {
@@ -60,13 +73,15 @@ export const fetchNoteFromServer = (filename: string): Promise<NoteInterface> =>
   });
 
 export const putNoteOnServer = (
-  note: NoteInterface
+  note: NoteInterface,
+  token: string
 ): Promise<NoteInformation> =>
   new Promise<NoteInformation>((resolve, reject) => {
     fetch(`${process.env.REACT_APP_SERVER_HOST}/api/note/${note.filename}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
       },
       body: JSON.stringify({
         content: note.content,
@@ -84,11 +99,15 @@ export const putNoteOnServer = (
   });
 
 export const deleteNoteOnServer = (
-  filename: string
+  filename: string,
+  token: string
 ): Promise<NoteInformation> =>
   new Promise<NoteInformation>((resolve, reject) => {
     fetch(`${process.env.REACT_APP_SERVER_HOST}/api/note/${filename}`, {
       method: 'DELETE',
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
     })
       .then((result) => result.json())
       .then((resData: ServerNoteActionResult) => {
@@ -103,13 +122,15 @@ export const deleteNoteOnServer = (
 
 export const toggleNoteFavoriteOnServer = (
   filename: string,
-  favorite: boolean
+  favorite: boolean,
+  token: string
 ): Promise<NoteInformation> =>
   new Promise<NoteInformation>((resolve, reject) => {
     fetch(`${process.env.REACT_APP_SERVER_HOST}/api/favorites/${filename}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
       },
       body: JSON.stringify({
         favorite: favorite,
@@ -126,15 +147,46 @@ export const toggleNoteFavoriteOnServer = (
       .catch((error) => reject(error));
   });
 
-export const scanNotesInServer = (): Promise<NoteInformation[]> =>
+export const scanNotesInServer = (token: string): Promise<NoteInformation[]> =>
   new Promise<NoteInformation[]>((resolve, reject) => {
-    fetch(`${process.env.REACT_APP_SERVER_HOST}/api/note/scan`)
+    fetch(`${process.env.REACT_APP_SERVER_HOST}/api/note/scan`, {
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    })
       .then((result) => result.json())
       .then((resData: ServerCatalogResult) => {
         if (resData.data && resData.data.notes) {
           resolve(resData.data.notes);
         } else {
           reject('Error scanning notes');
+        }
+      })
+      .catch((error) => reject(error));
+  });
+
+export const loginInServer = (
+  credentials: LoginCredentials
+): Promise<LoginResponse> =>
+  new Promise<LoginResponse>((resolve, reject) => {
+    fetch(`${process.env.REACT_APP_SERVER_HOST}/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(credentials),
+    })
+      .then((result) => result.json())
+      .then((resData: LoginResponse) => {
+        if (resData.access_token) {
+          const remainingMilliseconds = 24 * 60 * 60 * 1000;
+          const expiryDate = new Date(
+            new Date().getTime() + remainingMilliseconds
+          );
+          resData.expiryDate = expiryDate.toISOString();
+          resolve(resData);
+        } else {
+          reject('Error fetching data');
         }
       })
       .catch((error) => reject(error));

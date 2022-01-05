@@ -4,6 +4,7 @@ import creatSagaMiddleware from 'redux-saga';
 import notesReducer from './slices/notesSlice';
 import settingsReducer from './slices/settingsSlice';
 import syncReducer from './slices/syncSlice';
+import authReducer from './slices/authSlice'
 import rootSaga from '../sagas';
 
 const sagaMiddleware = creatSagaMiddleware();
@@ -12,6 +13,7 @@ const store = configureStore({
     notes: notesReducer,
     settings: settingsReducer,
     sync: syncReducer,
+    auth: authReducer,
   },
   // middleware: [sagaMiddleware, ...getDefaultMiddleware({thunk: false})],
   middleware: (getDefaultMiddleware) =>

@@ -7,6 +7,7 @@ import {
   Database,
   Tool,
   Download,
+  Lock,
 } from 'react-feather';
 import { useAppSelector, useAppDispatch } from '../hooks/store';
 import {
@@ -31,6 +32,7 @@ import {
   downloadNote,
   importNote as browserImportNote,
 } from '../helpers/browserFileHandling';
+import { clearAuthenticated, saveAuthData } from '../store/slices/authSlice';
 
 const MainMenu: React.FC = () => {
   const [showNotesList, setShowNotesList] = useState(false);
@@ -54,6 +56,10 @@ const MainMenu: React.FC = () => {
     dispatch(importNote({ filename, content }));
   const _downloadNote = () =>
     downloadNote(currentNote.filename, currentNote.content);
+  const _logout = useCallback(() => {
+    dispatch(saveAuthData(null));
+    dispatch(clearAuthenticated());
+  }, [dispatch]);
 
   const notesClickHandler = useCallback(() => {
     dispatch(setCurrentMenu(MENU_SELECTION.NOTES));
@@ -105,6 +111,10 @@ const MainMenu: React.FC = () => {
       });
     }
   }, [fileInput]);
+
+  const onLogoutHandler = useCallback(() => {
+    _logout();
+  }, [_logout]);
 
   let notesList = notes;
 
@@ -169,6 +179,15 @@ const MainMenu: React.FC = () => {
               active={false}
               title="Scan"
               icon={<Database />}
+            />
+          )}
+          {showTools && (
+            <MenuItem
+              onMenuClick={onLogoutHandler}
+              iconify={minimizeMenu}
+              active={false}
+              title="Logout"
+              icon={<Lock />}
             />
           )}
           <MenuItem

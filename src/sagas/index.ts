@@ -38,9 +38,11 @@ import {
   DeleteNoteAction,
   OpenNoteAction,
   ApplicationData,
+  LoginResponse,
 } from '../types';
 
 import { NoteInterface, NoteInformation } from '../models/Note';
+import { authAccessSelector } from '../store/slices/authSlice';
 
 const isServerMode = process.env.REACT_APP_SERVER_MODE;
 
@@ -49,7 +51,8 @@ function* syncData({ payload }: SyncAction) {
   try {
     // yield console.log("sync saga called");
     if (isServerMode) {
-      yield payload.pendingSync.map((n) => putNoteOnServer(n));
+      const loginResponse: LoginResponse = yield select(authAccessSelector);
+      yield payload.pendingSync.map((n) => putNoteOnServer(n, loginResponse.access_token));
       // const currentNote: NoteInterface = yield select(selectCurrentNote);
       // yield put(openNote(currentNote.filename));
     } else {
@@ -72,7 +75,8 @@ function* fetchNotes() {
       categories: [],
     };
     if (isServerMode) {
-      const { notes, favorites } = yield fetchNoteInformationFromServer();
+      const loginResponse: LoginResponse = yield select(authAccessSelector);
+      const { notes, favorites } = yield fetchNoteInformationFromServer(loginResponse.access_token);
       noteData.notes = notes;
       noteData.favorites = favorites;
       // yield console.log("Saga Notes putting :", noteData);
@@ -95,7 +99,8 @@ function* fetchMissingNotes({ payload }: ScanAction) {
     // yield console.log("Saga Missing Notes fetched");
     let noteData: NoteInformation[];
     if (isServerMode) {
-      noteData = yield scanNotesInServer();
+      const loginResponse: LoginResponse = yield select(authAccessSelector);
+      noteData = yield scanNotesInServer(loginResponse.access_token);
     } else {
       noteData = yield scanMissingNotes(payload);
     }
@@ -112,7 +117,8 @@ function* fetchMissingNotes({ payload }: ScanAction) {
 function* removeNote({ payload }: DeleteNoteAction) {
   try {
     if (isServerMode) {
-      yield deleteNoteOnServer(payload);
+      const loginResponse: LoginResponse = yield select(authAccessSelector);
+      yield deleteNoteOnServer(payload, loginResponse.access_token);
     } else {
       // yield console.log("Saga Deleting Notes: " + payload);
       yield removeLocalNote(payload);
@@ -136,7 +142,8 @@ function* fetchNote({ payload }: OpenNoteAction) {
       noteContent = pendingNote.content;
     } else {
       if (isServerMode) {
-        const fetchedNote: NoteInterface = yield fetchNoteFromServer(payload);
+        const loginResponse: LoginResponse = yield select(authAccessSelector);
+        const fetchedNote: NoteInterface = yield fetchNoteFromServer(payload, loginResponse.access_token);
         noteContent = fetchedNote.content;
       } else {
         noteContent = yield openLocalNote(payload);
@@ -163,7 +170,8 @@ function* toggleFavoriteNote() {
       if (noteFavorited) {
         setFavorite = noteFavorited.favorite;
       }
-      yield toggleNoteFavoriteOnServer(currentNote.filename, setFavorite);
+      const loginResponse: LoginResponse = yield select(authAccessSelector);
+      yield toggleNoteFavoriteOnServer(currentNote.filename, setFavorite, loginResponse.access_token);
       yield put(loadNotes());
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

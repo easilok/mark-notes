@@ -1,4 +1,4 @@
-import { NotesLocalData } from '../types';
+import { LoginResponse, NotesLocalData } from '../types';
 import { ApplicationSettings } from '../store/slices/settingsSlice';
 import { NoteInterface, convertFilepath } from '../models/Note';
 
@@ -6,14 +6,16 @@ export enum STORAGE_DATA_TYPE {
   APPLICATION_SETTINGS,
   APPLICATION_NOTES,
   NOTE,
+  AUTH_DATA
 }
 
 const STORAGE_FIELD = {
   [STORAGE_DATA_TYPE.APPLICATION_SETTINGS]: 'noteSettings',
   [STORAGE_DATA_TYPE.APPLICATION_NOTES]: 'noteData',
+  [STORAGE_DATA_TYPE.AUTH_DATA]: 'access',
 };
 
-type StoragePayload = NotesLocalData | ApplicationSettings | NoteInterface;
+type StoragePayload = NotesLocalData | ApplicationSettings | NoteInterface | LoginResponse | '';
 
 export function saveDataToStorage<T extends StoragePayload>(
   type: STORAGE_DATA_TYPE,
@@ -24,6 +26,9 @@ export function saveDataToStorage<T extends StoragePayload>(
       localStorage.setItem(STORAGE_FIELD[type], JSON.stringify(data));
       break;
     case STORAGE_DATA_TYPE.APPLICATION_NOTES:
+      localStorage.setItem(STORAGE_FIELD[type], JSON.stringify(data));
+      break;
+    case STORAGE_DATA_TYPE.AUTH_DATA:
       localStorage.setItem(STORAGE_FIELD[type], JSON.stringify(data));
       break;
     case STORAGE_DATA_TYPE.NOTE:
@@ -66,6 +71,15 @@ export function getDataFromStorage<T extends StoragePayload>(
         if (savedNote) {
           return JSON.parse(savedNote) as T;
         }
+      }
+
+      return null;
+    case STORAGE_DATA_TYPE.AUTH_DATA:
+      // eslint-disable-next-line no-case-declarations
+      const authData = localStorage.getItem(STORAGE_FIELD[type]);
+
+      if (authData) {
+        return JSON.parse(authData) as T;
       }
 
       return null;

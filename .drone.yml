@@ -12,10 +12,10 @@ steps:
 - name: scp files
   image: appleboy/drone-scp
   settings:
-    host: 102.168.1.75
+    host: 192.168.1.75
     user: 
-    from_secret: host_username
+      from_secret: ssh_username
     password: 
-    from_secret: host_password
+      from_secret: ssh_password
     target: /var/www/mark-notes
     source: build/*

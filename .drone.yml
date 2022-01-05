@@ -19,4 +19,5 @@ steps:
       from_secret: ssh_password
     target: /var/www/mark-notes/build
     source: build/*
+    strip_components: 1
     rm: true

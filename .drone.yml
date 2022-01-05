@@ -17,6 +17,6 @@ steps:
       from_secret: ssh_username
     password: 
       from_secret: ssh_password
-    target: /var/www/mark-notes
+    target: /var/www/mark-notes/build
     source: build/*
     rm: true

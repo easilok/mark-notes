@@ -1,0 +1,21 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: frontend
+  image: node
+  commands:
+  - npm install
+  - npm run build
+
+- name: scp files
+  image: appleboy/drone-scp
+  settings:
+    host: 102.168.1.75
+    user: 
+    from_secret: host_username
+    password: 
+    from_secret: host_password
+    target: /var/www/mark-notes
+    source: build/*

@@ -7,7 +7,8 @@ import {
   Database,
   Tool,
   Download,
-  Lock,
+  User,
+  Search,
 } from 'react-feather';
 import { useAppSelector, useAppDispatch } from '../hooks/store';
 import {
@@ -75,6 +76,14 @@ const MainMenu: React.FC = () => {
     dispatch(setCurrentMenu(MENU_SELECTION.FAVORITES));
     setShowNotesList((prevState) => !prevState);
   }, [dispatch]);
+
+  const searchClickHandler = useCallback(() => {
+    if (currentMenu === MENU_SELECTION.SEARCH) {
+      dispatch(setCurrentMenu(MENU_SELECTION.NONE));
+    } else {
+      dispatch(setCurrentMenu(MENU_SELECTION.SEARCH));
+    }
+  }, [dispatch, currentMenu]);
 
   const onScanFilesHandler = useCallback(() => {
     // Maybe show full sidebar
@@ -152,6 +161,13 @@ const MainMenu: React.FC = () => {
             title="Bookmarks"
             icon={<Bookmark />}
           />
+          <MenuItem
+            onMenuClick={searchClickHandler}
+            iconify={minimizeMenu}
+            active={currentMenu === MENU_SELECTION.SEARCH}
+            title="Search"
+            icon={<Search />}
+          />
         </section>
         <section>
           {showTools && hasNoteLoaded && (
@@ -187,7 +203,7 @@ const MainMenu: React.FC = () => {
               iconify={minimizeMenu}
               active={false}
               title="Logout"
-              icon={<Lock />}
+              icon={<User />}
             />
           )}
           <MenuItem

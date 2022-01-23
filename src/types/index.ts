@@ -44,6 +44,7 @@ export enum MENU_SELECTION {
   CATEGORY = 'CATEGORY',
   SCRATCHPAD = 'SCRATCHPAD',
   TRASH = 'TRASH',
+  SEARCH = 'SEARCH',
 }
 
 export interface LoginCredentials {
@@ -56,4 +57,3 @@ export interface LoginResponse {
   access_token: string;
   expiryDate: string;
 }
-

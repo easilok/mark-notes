@@ -1,0 +1,118 @@
+@import './variables';
+
+$input-focus-border: 3px;
+
+.form-group {
+  &:not(:last-child) {
+    margin-bottom: 0.75rem;
+  }
+  .form-control {
+    position: relative;
+    &.has-icons-left {
+      .input {
+        padding-left: 2.5em;
+      }
+    }
+    &.has-icons-right {
+      .input {
+        padding-left: 2.5em;
+      }
+    }
+    &.has-icons-left,
+    &.has-icons-right {
+      .icon {
+        position: absolute;
+        top: 0;
+        height: 2.5em;
+        width: 2.5em;
+        color: #dbdbdb;
+      }
+      .input:focus ~ .icon {
+        color: $app-palette-primary;
+      }
+    }
+  }
+}
+
+.input,
+.textarea {
+  width: 100%;
+  max-width: 100%;
+  // box-shadow: inset 0 0.0625em 0.125em hsl(10 10 10 / 5%);
+}
+
+.input,
+.textarea,
+.select select {
+  background-color: #fff;
+  border-color: #dbdbdb;
+  border-radius: 4px;
+  color: #363636;
+}
+
+.input,
+.textarea {
+  border: transparent $input-focus-border solid;
+}
+
+.input:focus,
+.input:focus-visible,
+.textarea:focus,
+.input:focus-visible {
+  // outline: $app-palette-primary auto 1px;
+  outline: none;
+  border: $app-palette-primary $input-focus-border solid;
+}
+
+.button,
+.file-cta,
+.file-name,
+.input,
+.pagination-ellipsis,
+.pagination-link,
+.pagination-next,
+.pagination-previous,
+.select select,
+.textarea {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  align-items: center;
+  border: $input-focus-border solid transparent;
+  border-radius: 4px;
+  box-shadow: none;
+  display: inline-flex;
+  font-size: 1rem;
+  height: 2.5em;
+  justify-content: flex-start;
+  line-height: 1.5;
+  padding-bottom: calc(0.5em - 1px);
+  padding-left: calc(0.75em - 1px);
+  padding-right: calc(0.75em - 1px);
+  padding-top: calc(0.5em - 1px);
+  position: relative;
+  vertical-align: top;
+}
+
+.icon {
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.is-left {
+  left: 0;
+}
+
+.is-right {
+  right: 0;
+}
+
+.is-flex {
+  display: flex;
+}
+
+.is-justify-content-end {
+  justify-content: end;
+}

@@ -14,13 +14,19 @@ import { useInterval } from './hooks/interval';
 
 import { LoginResponse, LoginCredentials } from './types';
 
-import {loginInServer} from './api/server'
+import { loginInServer } from './api/server';
 
 import './styles/App.scss';
-import { clearAuthenticated, loadAuthData, saveAuthData, setAuthenticated } from './store/slices/authSlice';
+import {
+  clearAuthenticated,
+  loadAuthData,
+  saveAuthData,
+  setAuthenticated,
+} from './store/slices/authSlice';
+import { SwalToast } from './helpers/SweetAlert';
 
 const App: React.FC = () => {
-  const {isAuth, access} = useAppSelector((state) => state.auth);
+  const { isAuth, access } = useAppSelector((state) => state.auth);
   const {
     notes,
     categories,
@@ -38,7 +44,7 @@ const App: React.FC = () => {
   const _saveAuthData = (authData: LoginResponse) => {
     dispatch(saveAuthData(authData));
     dispatch(setAuthenticated());
-  }
+  };
 
   const logoutHandler = useCallback(() => {
     _clearAuth();
@@ -72,22 +78,21 @@ const App: React.FC = () => {
     setAutoLogout(remainingMilliseconds);
   }, [setAutoLogout, logoutHandler, access]);
 
-
   const loginHandler = (authData: LoginCredentials) => {
-    loginInServer({username: authData.username, password: authData.password})
+    loginInServer({ username: authData.username, password: authData.password })
       .then((loginResult: LoginResponse) => {
         const remainingMilliseconds = 24 * 60 * 60 * 1000;
         const expiryDate = new Date(
           new Date().getTime() + remainingMilliseconds
         );
         setAutoLogout(remainingMilliseconds);
-        _saveAuthData({...loginResult, expiryDate: expiryDate.toISOString()});
+        _saveAuthData({ ...loginResult, expiryDate: expiryDate.toISOString() });
       })
       .catch((err) => {
-        // SwalToast({
-        //   title: 'Invalid Credentials',
-        //   icon: 'error',
-        // });
+        SwalToast({
+          title: 'Invalid Credentials',
+          icon: 'error',
+        });
         // eslint-disable-next-line no-console
         console.log(err);
         _clearAuth();
@@ -96,12 +101,12 @@ const App: React.FC = () => {
 
   useEffect(() => {
     dispatch(loadAuthData());
-  }, [dispatch])
+  }, [dispatch]);
 
   useEffect(() => {
     if (isAuth) {
-    dispatch(loadNotes());
-    dispatch(loadUserSettings());
+      dispatch(loadNotes());
+      dispatch(loadUserSettings());
     }
   }, [dispatch, isAuth]);
 
@@ -135,7 +140,7 @@ const App: React.FC = () => {
   if (!isAuth) {
     return (
       <div className="App">
-        <Login onLogin={loginHandler}/>
+        <Login onLogin={loginHandler} />
       </div>
     );
   }
@@ -149,14 +154,14 @@ const App: React.FC = () => {
   }
 
   return (
-      <div className="App">
-        <MainMenu />
-        {currentNote.filename.length > 0 || currentNote.content.length > 0 ? (
-          <NoteApp />
-        ) : (
-          <EmptySelection />
-        )}
-      </div>
+    <div className="App">
+      <MainMenu />
+      {currentNote.filename.length > 0 || currentNote.content.length > 0 ? (
+        <NoteApp />
+      ) : (
+        <EmptySelection />
+      )}
+    </div>
   );
 };
 

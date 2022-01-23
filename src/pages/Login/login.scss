@@ -30,6 +30,7 @@ div.text-separator {
 
 .container.login {
   height: 100vh;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -38,26 +39,53 @@ div.text-separator {
     max-width: 600px;
   }
   .login__header {
-    margin-bottom: 2rem;
+    // margin-bottom: 1rem;
     text-align: center;
     h1 {
-      color: $nibble-color;
+      color: $app-palette-primary;
       font-weight: normal;
       text-transform: uppercase;
     }
   }
+  .login__panel {
+    border-top: $app-palette-medium 1px solid;
+    padding-top: 1rem;
+  }
   .login__oauth,
   .login__separator,
   .login__credentials {
-    background-color: #d4d4d4;
-    background-color: hsl(0, 0%, 96%);
+    background-color: inherit;
   }
   .login__oauth,
   .login__credentials {
-    padding: 2rem;
+    padding: 1rem;
     > form {
       max-width: 300px;
       margin: auto;
+    }
+    button.button {
+      min-width: 100px;
+      justify-content: center;
+      background-color: $app-palette-primary;
+      padding: 0.6rem;
+      outline: none;
+      border-radius: 10px;
+      border: $app-palette-primary 3px solid;
+      color: inherit;
+      display: flex;
+      align-items: center;
+      margin: 2rem auto;
+      cursor: pointer;
+      font-weight: bold;
+      svg {
+        margin: 0 8px 0 0;
+      }
+      &:hover,
+      &:active {
+        background-color: $app-palette-darkest;
+        border: $app-palette-primary 3px solid;
+        color: $app-palette-primary;
+      }
     }
   }
   .login__oauth {

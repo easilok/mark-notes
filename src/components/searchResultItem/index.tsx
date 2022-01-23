@@ -1,6 +1,9 @@
 import React, { useCallback } from 'react';
 import { openNote } from '../../store/slices/notesSlice';
-import { setCurrentMenu } from '../../store/slices/settingsSlice';
+import {
+  setCurrentMenu,
+  setPreviewNote,
+} from '../../store/slices/settingsSlice';
 import { useAppDispatch } from '../../hooks/store';
 
 import { MENU_SELECTION } from '../../types';
@@ -18,6 +21,7 @@ export const SearchResultItem: React.FC<SearchResultItemProps> = ({
 }) => {
   const dispatch = useAppDispatch();
   const _openNote = useCallback(() => {
+    dispatch(setPreviewNote(true));
     dispatch(openNote(filename));
     dispatch(setCurrentMenu(MENU_SELECTION.NONE));
   }, [dispatch, openNote, filename]);

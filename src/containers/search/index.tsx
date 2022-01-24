@@ -13,13 +13,15 @@ export const SearchNote: React.FC = () => {
 
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(event.target.value);
+
+    // console.log(event.target.value);
   };
 
   let matchSearchNotes: NoteInformation[] = [];
 
   if (searchText.length > 2) {
     matchSearchNotes = notes.filter((note) =>
-      note.title.toLocaleLowerCase().includes(searchText)
+      note.title.toLocaleLowerCase().includes(searchText.toLocaleLowerCase())
     );
   }
 

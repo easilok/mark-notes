@@ -15,7 +15,7 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-  isAuth: false,
+  isAuth: process.env.REACT_APP_SERVER_MODE ? false : true,
   access: {
     access_token: '',
     refresh_token: '',

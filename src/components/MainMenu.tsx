@@ -35,6 +35,8 @@ import {
 } from '../helpers/browserFileHandling';
 import { clearAuthenticated, saveAuthData } from '../store/slices/authSlice';
 
+const isServerMode = process.env.REACT_APP_SERVER_MODE;
+
 const MainMenu: React.FC = () => {
   const [showNotesList, setShowNotesList] = useState(false);
   const [showTools, setShowTools] = useState(false);
@@ -197,7 +199,7 @@ const MainMenu: React.FC = () => {
               icon={<Database />}
             />
           )}
-          {showTools && (
+          {isServerMode && showTools && (
             <MenuItem
               onMenuClick={onLogoutHandler}
               iconify={minimizeMenu}

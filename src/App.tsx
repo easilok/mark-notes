@@ -25,6 +25,8 @@ import {
 } from './store/slices/authSlice';
 import { SwalToast } from './helpers/SweetAlert';
 
+const isServerMode = process.env.REACT_APP_SERVER_MODE;
+
 const App: React.FC = () => {
   const { isAuth, access } = useAppSelector((state) => state.auth);
   const {
@@ -38,32 +40,43 @@ const App: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const _clearAuth = () => {
-    dispatch(saveAuthData(null));
-    dispatch(clearAuthenticated());
+    if (isServerMode) {
+      dispatch(saveAuthData(null));
+      dispatch(clearAuthenticated());
+    }
   };
   const _saveAuthData = (authData: LoginResponse) => {
-    dispatch(saveAuthData(authData));
-    dispatch(setAuthenticated());
+    if (isServerMode) {
+      dispatch(saveAuthData(authData));
+      dispatch(setAuthenticated());
+    }
   };
 
   const logoutHandler = useCallback(() => {
-    _clearAuth();
-    // setAccess('');
-    if (typeof window !== 'undefined') {
-      window.location.href = '/';
+    if (isServerMode) {
+      _clearAuth();
+      // setAccess('');
+      if (typeof window !== 'undefined') {
+        window.location.href = '/';
+      }
     }
   }, [_clearAuth]);
 
   const setAutoLogout = useCallback(
     (milliseconds) => {
-      setTimeout(() => {
-        logoutHandler();
-      }, milliseconds);
+      if (isServerMode) {
+        setTimeout(() => {
+          logoutHandler();
+        }, milliseconds);
+      }
     },
     [logoutHandler]
   );
 
   useEffect(() => {
+    if (!isServerMode) {
+      return;
+    }
     if (access.access_token.length === 0) {
       return;
     }
@@ -79,6 +92,9 @@ const App: React.FC = () => {
   }, [setAutoLogout, logoutHandler, access]);
 
   const loginHandler = (authData: LoginCredentials) => {
+    if (!isServerMode) {
+      return;
+    }
     loginInServer({ username: authData.username, password: authData.password })
       .then((loginResult: LoginResponse) => {
         const remainingMilliseconds = 24 * 60 * 60 * 1000;
@@ -100,6 +116,9 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
+    if (!isServerMode) {
+      return;
+    }
     dispatch(loadAuthData());
   }, [dispatch]);
 

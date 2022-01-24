@@ -9,6 +9,11 @@ import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 import store from './store/store';
 
+if (!process.env.REACT_APP_SERVER_MODE) {
+  //eslint-disable-next-line no-console
+  console.log('Starting in client only mode');
+}
+
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>

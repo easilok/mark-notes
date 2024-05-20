@@ -34,8 +34,7 @@ import {
   importNote as browserImportNote,
 } from '../helpers/browserFileHandling';
 import { clearAuthenticated, saveAuthData } from '../store/slices/authSlice';
-
-const isServerMode = process.env.REACT_APP_SERVER_MODE;
+import { isServerMode } from '../api/server';
 
 const MainMenu: React.FC = () => {
   const [showNotesList, setShowNotesList] = useState(false);

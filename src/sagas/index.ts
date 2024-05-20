@@ -31,6 +31,7 @@ import {
   deleteNoteOnServer,
   toggleNoteFavoriteOnServer,
   scanNotesInServer,
+  isServerMode,
 } from '../api/server';
 import {
   ScanAction,
@@ -43,8 +44,6 @@ import {
 
 import { NoteInterface, NoteInformation } from '../models/Note';
 import { authAccessSelector } from '../store/slices/authSlice';
-
-const isServerMode = process.env.REACT_APP_SERVER_MODE;
 
 function* syncData({ payload }: SyncAction) {
   // const isDemo = true;

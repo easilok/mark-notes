@@ -8,6 +8,7 @@ import {
   saveDataToStorage,
   getDataFromStorage,
 } from '../../storage/local';
+import { isServerMode } from '../../api/server';
 
 interface AuthState {
   access: LoginResponse;
@@ -15,7 +16,7 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-  isAuth: process.env.REACT_APP_SERVER_MODE ? false : true,
+  isAuth: !isServerMode,
   access: {
     access_token: '',
     refresh_token: '',

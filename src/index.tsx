@@ -8,8 +8,9 @@ import reportWebVitals from './reportWebVitals';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 import store from './store/store';
+import { isServerMode } from './api/server';
 
-if (!process.env.REACT_APP_SERVER_MODE) {
+if (!isServerMode) {
   //eslint-disable-next-line no-console
   console.log('Starting in client only mode');
 }

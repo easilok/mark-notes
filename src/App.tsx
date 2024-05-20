@@ -14,7 +14,7 @@ import { useInterval } from './hooks/interval';
 
 import { LoginResponse, LoginCredentials } from './types';
 
-import { loginInServer } from './api/server';
+import { loginInServer, isServerMode } from './api/server';
 
 import './styles/App.scss';
 import {
@@ -24,8 +24,6 @@ import {
   setAuthenticated,
 } from './store/slices/authSlice';
 import { SwalToast } from './helpers/SweetAlert';
-
-const isServerMode = process.env.REACT_APP_SERVER_MODE;
 
 const App: React.FC = () => {
   const { isAuth, access } = useAppSelector((state) => state.auth);

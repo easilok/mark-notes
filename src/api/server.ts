@@ -20,6 +20,8 @@ interface ServerNoteResult {
   data: NoteInterface;
 }
 
+export const isServerMode = process.env.REACT_APP_SERVER_MODE === '1';
+
 export const fetchNoteInformationFromServer = (
   token: string
 ): Promise<ApplicationData> =>

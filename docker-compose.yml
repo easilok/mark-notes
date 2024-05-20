@@ -1,0 +1,15 @@
+---
+version: "3.3"
+
+services:
+  mark-notes:
+      build:
+          context: .
+          args:
+            NOTES_SERVER_HOST: ${NOTES_SERVER_HOST:-""}
+            NOTES_SERVER_MODE: ${NOTES_SERVER_MODE:-""}
+      container_name: mark-notes
+      restart: unless-stopped
+      ports:
+        - "5178:80"
+
